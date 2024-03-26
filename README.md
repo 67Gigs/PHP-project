@@ -1,2 +1,4 @@
 # PHP-project
-a PHP project for uni
+Projet PHP en MVC, visant a créer un site web (front et back) 
+Theme : 
+#
