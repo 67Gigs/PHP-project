@@ -108,6 +108,30 @@ class AccessUser {
         return $user;
     }
 
+    public function getUsers() {
+        $req = "SELECT * FROM users";
+        $res = $this->pdo->prepare($req);
+        $res->execute();
+        $data = $res->fetchAll();
+        $users = [];
+        foreach ($data as $user) {
+            array_push($users, new User($user['username'], $user['password'], $user['email']));
+        }
+        return $users;
+    }
+
+    public function getUserChallenges($username) {
+        $req = "SELECT * FROM challenges WHERE username = '$username'";
+        $res = $this->pdo->prepare($req);
+        $res->execute();
+        $data = $res->fetchAll();
+        $challenges = [];
+        foreach ($data as $challenge) {
+            array_push($challenges, new Challenge($challenge['title'], $challenge['type'], $challenge['description'], $challenge['points'], $challenge['solution'], $challenge['SSH_link']));
+        }
+        return $challenges;
+    }
+
 }
 
 class Admin extends User {

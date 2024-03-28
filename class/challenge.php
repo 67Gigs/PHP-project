@@ -74,15 +74,11 @@ class Challenge {
         return $this->users;
     }
 
-    public function getNbUsers() {
-        return count($this->users);
-    }
-
 }
 
 class AccessChallenge {
     private $pdo;
-    
+
     public function __construct($param_pdo, $tbs) {
         $this->pdo = $param_pdo;
     }
@@ -115,7 +111,7 @@ class AccessChallenge {
         return $challenge;
     }
 
-    public function getChallenges() {
+    public function getAllChallenges() {
         $req = "SELECT * FROM challenge";
         $res = $this->pdo->prepare($req);
         $res->execute();
@@ -128,31 +124,33 @@ class AccessChallenge {
         return $challenges;
     }
 
-    public function getChallengesByType($type) {
-        $req = "SELECT * FROM challenge WHERE type = '".$type."'";
-        $res = $this->pdo->prepare($req);
-        $res->execute();
-        $data = $res->fetchAll();
-        $challenges = [];
-        foreach($data as $row) {
-            $challenge = new Challenge($row['title'], $row['type'], $row['description'], $row['points'], $row['solution'], $row['SSH_link']);
-            array_push($challenges, $challenge);
-        }
-        return $challenges;
-    }
+    // A voir si on garde ou pas
 
-    public function getChallengesByDifficulty($difficulty) {
-        $req = "SELECT * FROM challenge WHERE difficulty = '".$difficulty."'";
-        $res = $this->pdo->prepare($req);
-        $res->execute();
-        $data = $res->fetchAll();
-        $challenges = [];
-        foreach($data as $row) {
-            $challenge = new Challenge($row['title'], $row['type'], $row['description'], $row['points'], $row['solution'], $row['SSH_link']);
-            array_push($challenges, $challenge);
-        }
-        return $challenges;
-    }
+    // public function getChallengesByType($type) {
+    //     $req = "SELECT * FROM challenge WHERE type = '".$type."'";
+    //     $res = $this->pdo->prepare($req);
+    //     $res->execute();
+    //     $data = $res->fetchAll();
+    //     $challenges = [];
+    //     foreach($data as $row) {
+    //         $challenge = new Challenge($row['title'], $row['type'], $row['description'], $row['points'], $row['solution'], $row['SSH_link']);
+    //         array_push($challenges, $challenge);
+    //     }
+    //     return $challenges;
+    // }
+
+    // public function getChallengesByDifficulty($difficulty) {
+    //     $req = "SELECT * FROM challenge WHERE difficulty = '".$difficulty."'";
+    //     $res = $this->pdo->prepare($req);
+    //     $res->execute();
+    //     $data = $res->fetchAll();
+    //     $challenges = [];
+    //     foreach($data as $row) {
+    //         $challenge = new Challenge($row['title'], $row['type'], $row['description'], $row['points'], $row['solution'], $row['SSH_link']);
+    //         array_push($challenges, $challenge);
+    //     }
+    //     return $challenges;
+    // }
 
 }
 
