@@ -6,6 +6,18 @@
     <title>Sign up</title>
 </head>
 <body>
-    
+    <form action="[onshow.cible]" method="post">
+        <input type="hidden" name="route" value="sign_process" id="route">
+        <label for="username">Pseudo</label>
+        <input type="text" name="username" id="username" required>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" required>
+        <label for="password">Mot de passe</label>
+        <input type="password" name="password" id="password" required>
+        <label for="password_confirm">Confirmer le mot de passe</label>
+        <input type="password" name="password_confirm" id="password_confirm" required>
+        <input type="submit" value="S'inscrire">
+    </form>
+
 </body>
 </html>

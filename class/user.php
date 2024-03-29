@@ -132,6 +132,29 @@ class AccessUser {
         return $challenges;
     }
 
+    public function getUserScore($username) {
+        $req = "SELECT score FROM users WHERE username = '$username'";
+        $res = $this->pdo->prepare($req);
+        $res->execute();
+        $data = $res->fetch();
+        return $data['score'];
+    }
+
+    public function login($username, $password) {
+        $req = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
+        $res = $this->pdo->prepare($req);
+        $res->execute();
+        $data = $res->fetch();
+        if ($data) {
+            $_SESSION['username'] = $username;
+            $_SESSION['role'] = $data['role'];
+            $_SESSION['score'] = $data['score'];
+            header('Location: index.php');
+        } else {
+            header('Location: index.php?page=login');
+        }
+    }
+
 }
 
 class Admin extends User {

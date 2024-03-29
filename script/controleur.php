@@ -16,6 +16,8 @@ try {
     $PDO = new PDO("mysql:host=$host;dbname=$dbname", $login, $password);
     $status = "OK";
     $cible = $_SERVER["PHP_SELF"];
+
+    $Applic = new Appli($tbs, $PDO);
     
 } catch (Exception $e) {
     die('Error : ' . $e->getMessage());

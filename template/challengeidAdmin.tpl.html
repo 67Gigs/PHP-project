@@ -10,12 +10,7 @@
     <p>[onshow.description]</p>
     <p>Points à gagner : [onshow.points]</p>
     <p>Command SSH : [onshow.SSH]</p>
-    <form action="[onshow.cible]" method="post">
-        <input type="hidden" name="route" value="challenge_process" id="route">
-        <label for="solution">Solution : </label>
-        <input type="password" name="solution" id="solution" required>
-        <input type="submit" value="Valider">
-    </form>
-    <p>[onshow.valide]</p>
+    <p>Solution : [onshow.solution]</p>
+    <a href="[onshow.cible]?route=modif_chall?id=[onshow.id]">Modifier le challenge</a>
 </body>
 </html>

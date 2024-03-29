@@ -16,7 +16,7 @@ class Challenge {
     private $users = [];
     private $difficulty = 0;
 
-    public function __construct($title, $type,$description, $points, $solution, $SSH_link, $difficulty) {
+    public function __construct($title, $type, $description, $points, $solution, $SSH_link, $difficulty) {
         $this->id = uniqid(); 
         $this->title = $title;
         $this->type = $type;
@@ -119,6 +119,28 @@ class AccessChallenge {
         $challenges = [];
         foreach($data as $row) {
             $challenge = new Challenge($row['title'], $row['type'], $row['description'], $row['points'], $row['solution'], $row['SSH_link']);
+            array_push($challenges, $challenge);
+        }
+        return $challenges;
+    }
+
+    public function validateChallenge ($id, $solution) {
+        $challenge = $this->getChallenge($id);
+        if ($challenge->compareSolution($solution)) {
+            $req = "INSERT INTO user_challenge (id_user, id_challenge) VALUES ('".$_SESSION['id']."', '".$id."')";
+            $res = $this->pdo->prepare($req);
+            $res->execute();
+        }
+    }
+
+    public function getChallengesByUser($id) {
+        $req = "SELECT * FROM user_challenge WHERE id_user = '".$id."'";
+        $res = $this->pdo->prepare($req);
+        $res->execute();
+        $data = $res->fetchAll();
+        $challenges = [];
+        foreach($data as $row) {
+            $challenge = $this->getChallenge($row['id_challenge']);
             array_push($challenges, $challenge);
         }
         return $challenges;

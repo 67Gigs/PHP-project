@@ -6,6 +6,37 @@
     <title>Ajouter Un Challenge</title>
 </head>
 <body>
+    <h1>Ajouter un challenge</h1>
+    <form action="[onshow.cible]?route=addChallenge" method="post">
+        <label for="title">Titre</label>
+        <input type="text" name="title" id="title" required>
+        <label for="description">Description</label>
+        <input type="text" name="description" id="description" required>
+        <label for="points">Points</label>
+        <input type="number" name="points" id="points" required>
+        <label for="type">Type</label>
+        <select name="type" id="type">
+            <option value="CTF">CTF</option>
+            <option value="Web">Web</option>
+            <option value="Forensic">Forensic</option>
+            <option value="Reverse">Reverse</option>
+            <option value="Crypto">Crypto</option>
+            <option value="Pwn">Pwn</option>
+            <option value="Misc">Misc</option>
+        </select>
+        <label for="difficulty">Difficulty</label>
+        <select name="difficulty" id="difficulty">
+            <option value="Facile">Facile</option>
+            <option value="Moyen">Moyen</option>
+            <option value="Difficile">Difficile</option>
+        </select>
+
+        <label for="SSH">Commande SSH</label>
+        <input type="text" name="SSH" id="SSH" required>
+
+        <input type="submit" value="Ajouter">
+    </form>
+    <a href="[onshow.cible]">Retour</a>
     
 </body>
 </html>
