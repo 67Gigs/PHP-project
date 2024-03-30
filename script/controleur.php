@@ -1,5 +1,6 @@
 <?php
 
+session_start();
 require('../class/tbs_class.php');
 require('../class/user.php');
 require('../class/challenge.php');
@@ -14,14 +15,14 @@ $tbs = new clsTinyButStrong;
 
 try {
     $PDO = new PDO("mysql:host=$host;dbname=$dbname", $login, $password);
-    $status = "OK";
     $cible = $_SERVER["PHP_SELF"];
+    $Appli = new Appli($tbs, $PDO);
+    $accChal = new AccessChallenge($PDO);
+    $accUser = new AccessUser($PDO);
 
-    $Applic = new Appli($tbs, $PDO);
+    $Appli->engine($accChal, $accUser);
     
 } catch (Exception $e) {
     die('Error : ' . $e->getMessage());
 }
 
-
-?>
