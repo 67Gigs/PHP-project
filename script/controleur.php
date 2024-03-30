@@ -11,6 +11,7 @@ require('controleur.class.php');
 
 
 $tbs = new clsTinyButStrong;
+$tbs->SetOption(array('var_mode' => 0));
 
 
 try {
@@ -19,7 +20,6 @@ try {
     $Appli = new Appli($tbs, $PDO);
     $accChal = new AccessChallenge($PDO);
     $accUser = new AccessUser($PDO);
-
     $Appli->engine($accChal, $accUser);
     
 } catch (Exception $e) {

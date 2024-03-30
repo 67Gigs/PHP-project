@@ -11,9 +11,7 @@ class User {
 
     public function __construct($username, $password, $email) {
         $this->username = $username;
-        if (validatePassword($password)) {
-            $this->password = $password;
-        }
+        $this->password = $password;
         $this->email = $email;
     }
 

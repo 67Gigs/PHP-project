@@ -104,13 +104,21 @@ class Appli {
         $this->tbs->Show();
     }
 
-    private function profile() { // page de profil ou de profil admin
+    private function profile($accUser) { // page de profil ou de profil admin
         if (isset($_SESSION["role"])) {
+            
             if ($_SESSION["role"] == "admin") {
                 $this->tbs->LoadTemplate("../template/profileAdmin.tpl.html");
             } else {
                 $this->tbs->LoadTemplate("../template/profile.tpl.html");
             }
+            $user = $accUser->getUser($_SESSION["username"]);
+    
+            $username = $user->getUsername();
+            $email = $user->getEmail();
+            $role = $user->getRole();
+            $score = $user->getScore();
+
             $this->tbs->Show();
         } else {
             $this->default();
@@ -120,7 +128,7 @@ class Appli {
     private function updateEmail($accUser) { // processus de mise à jour de l'email
         if (isset($_SESSION["username"]) && isset($_POST["email"])) {
             $accUser->updateEmail($_SESSION["username"], $_POST["email"]);
-            $this->profile();
+            $this->profile($accUser);
         } else {
             $cible = $_SERVER["PHP_SELF"];
             $this->default();
@@ -135,7 +143,7 @@ class Appli {
             } else {
                 $message = "Mot de passe incorrect";
             }
-            $this->profile();
+            $this->profile($accUser);
         } else {
             $cible = $_SERVER["PHP_SELF"];
             $this->default();
@@ -190,6 +198,7 @@ class Appli {
                     session_destroy();
                 }
                 $cible = $_SERVER["PHP_SELF"];
+
                 $this->default();
                 break;
             
@@ -267,7 +276,7 @@ class Appli {
                 break;
             
             case 'profile': // page de profil ou de profil admin
-                $this->profile();
+                $this->profile($accUser);
                 break;
             
             case 'delete_profile': // processus de suppression d'utilisateur
