@@ -5,4 +5,3 @@ $dbname = "php_nbensadok";
 $login = "php_nbensadok";
 $password = "ebefeXqcGtVnCVjmiCF1NHA/s";
 
-?>

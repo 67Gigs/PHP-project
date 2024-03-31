@@ -7,7 +7,8 @@
 </head>
 <body>
     <h1>Ajouter un challenge</h1>
-    <form action="[onshow.cible]?route=addChallenge" method="post">
+    <form action="[onshow.cible]" method="get">
+        <input type="hidden" name="route" value="add_challenge_process">
         <label for="title">Titre</label>
         <input type="text" name="title" id="title" required>
         <label for="description">Description</label>
@@ -31,12 +32,16 @@
             <option value="Difficile">Difficile</option>
         </select>
 
-        <label for="SSH">Commande SSH</label>
-        <input type="text" name="SSH" id="SSH" required>
+
+        <label for="SSH_link">Commande SSH</label>
+        <input type="text" name="SSH_link" id="SSH_link" required>
+
+        <label for="solution">Solution</label>
+        <input type="text" name="solution" id="solution" required>
 
         <input type="submit" value="Ajouter">
     </form>
-    <a href="[onshow.cible]">Retour</a>
+    <a href="[onshow.cible]?route=all_challenges">Retour</a>
     
 </body>
 </html>

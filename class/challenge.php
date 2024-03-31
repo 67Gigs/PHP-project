@@ -12,7 +12,7 @@ class Challenge {
     private $difficulty = 0;
     private $validation = '';
 
-    public function __construct($title, $type, $description, $points, $solution, $SSH_link, $difficulty) {
+    public function __construct($title, $type, $description, $points, $solution, $SSH_link, $difficulty, $id) {
         $this->title = $title;
         $this->type = $type;
         $this->description = $description;
@@ -20,6 +20,7 @@ class Challenge {
         $this->solution = $solution;
         $this->SSH_link = $SSH_link;
         $this->difficulty = $difficulty;
+        $this->id = $id;
     }
 
     public function setId($id) {
@@ -95,10 +96,10 @@ class AccessChallenge {
     }
 
     public function addChallenge($title, $type, $description, $points, $solution, $SSH_link, $difficulty) {
-        $challenge = new Challenge($title, $type, $description, $points, $solution, $SSH_link, $difficulty);
-        $req = "INSERT INTO challenge (title, type, description, points, solution, SSH_link) VALUES ('".$challenge->getTitle()."', '".$challenge->getType()."', '".$challenge->getDescription()."', '".$challenge->getPoints()."', '".$challenge->getSolution()."', '".$challenge->getSSH_link()."')";
+        $req = "INSERT INTO challenge (title, type, description, points, solution, SSH_link, difficulty) VALUES ('".$title."', '".$type."', '".$description."', '".$points."', '".$solution."', '".$SSH_link."', '".$difficulty."')";
         $res = $this->pdo->prepare($req);
         $res->execute();
+        return $res->rowCount();
     }
 
     public function removeChallenge($id) {
@@ -118,7 +119,7 @@ class AccessChallenge {
         $res = $this->pdo->prepare($req);
         $res->execute();
         $data = $res->fetch();
-        $challenge = new Challenge($data['title'], $data['type'], $data['description'], $data['points'], $data['solution'], $data['SSH_link'], $data['difficulty']);
+        $challenge = new Challenge($data['title'], $data['type'], $data['description'], $data['points'], $data['solution'], $data['SSH_link'], $data['difficulty'], $data['id']);
         return $challenge;
     }
 
@@ -133,7 +134,7 @@ class AccessChallenge {
         $data2 = $res->fetchAll();
         $challenges = [];
         foreach($data as $row) {
-            $challenge = new Challenge($row['title'], $row['type'], $row['description'], $row['points'], $row['solution'], $row['SSH_link'], $row['difficulty']);
+            $challenge = new Challenge($row['title'], $row['type'], $row['description'], $row['points'], $row['solution'], $row['SSH_link'], $row['difficulty'], $row['id']);
             foreach($data2 as $row2) {
                 if ($row['id'] == $row2['id_challenge']) {
                     $challenge->addUser($_SESSION['username']);

@@ -70,9 +70,14 @@ class AccessUser {
     public function addUser($username, $password, $email) {
         $user = new User($username, $password, $email);
         try {
-            $req = "INSERT INTO users (username, password, email) VALUES ('$username', '$password', '$email')";
+            $req = "INSERT INTO users (username, password, email, role, score) VALUES ('$username', '$password', '$email', 'user', 0)";
             $res = $this->pdo->prepare($req);
             $res->execute();
+            if ($res) {
+                return $user;
+            } else {
+                return null;
+            }
         } catch (Exception $e) {
             echo 'Error : ' . $e->getMessage();
         }

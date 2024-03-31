@@ -6,15 +6,23 @@
     <title>Challenges</title>
 </head>
 <body>
-    <nav></nav>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="[onshow.cible]?route=home">Home</a></li>
+                <li><a href="[onshow.cible]?route=all_challenges">Challenges</a></li>
+                <li><a href="[onshow.cible]?route=scoreboard">Scoreboard</a></li>
+                <li><a href="[onshow.cible]?route=logout">Logout</a></li>
+            </ul>
+        </nav>
     <main>
         <h1>Challenges</h1>
         <div>
-            <a href="[onshow.cible]?route=challenge&id=[id.val,block=div]" class="lien-challenge">
-                <h2>[title.val,block=div]</h2>
-                <p>[type.val,block=div]</p>
-                <p>[difficulty.val,block=div]</p>
-                <p>[valide.val,block=div]</p>
+            <a href="[onshow.cible]?route=challenge&id=[id.val;block=div]" class="lien-challenge">
+                <h2>[title.val;block=div]</h2>
+                <p>[type.val;block=div]</p>
+                <p>[difficulty.val;block=div]</p>
+                <p>[valide.val;block=div]</p>
             </a>
         </div>
     </main>

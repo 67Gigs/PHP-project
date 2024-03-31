@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Challenge : [onshow.title]</title>
+    <title>Challenge</title>
 </head>
 <body>
-    <h1>[onshow.title]</h1>
-    <p>[onshow.description]</p>
-    <p>Points à gagner : [onshow.points]</p>
-    <p>Command SSH : [onshow.SSH]</p>
-    <p>Solution : [onshow.solution]</p>
-    <a href="[onshow.cible]?route=modif_chall?id=[onshow.id]">Modifier le challenge</a>
+    <div>
+        <h1>[title.val;block=div]</h1>
+        <p>[description.val;block=div]</p>
+        <p>Points à gagner : [points.val;block=div]</p>
+        <p>Command SSH : [SSH.val;block=div]</p>
+        <p>Solution : [solution.val;block=div]</p>
+        <a href="[onshow.cible]?route=modif_chall?id=[id.val;block=div]">Modifier le challenge</a>
+    </div>
 </body>
 </html>

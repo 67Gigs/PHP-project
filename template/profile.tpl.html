@@ -9,25 +9,26 @@
 
     <nav>
         <a href="[onshow.cible]?route=home">Home</a>
-        <a href="[onshow.cible]?route=challenges">Challenges</a>
+        <a href="[onshow.cible]?route=all_challenges">Challenges</a>
         <a href="[onshow.cible]?route=profile">Profile</a>
         <a href="[onshow.cible]?route=logout">Logout</a>
     </nav>
 
     <main>
         <h1>Profile</h1>
-        <p>Pseudo: [username.val]</p>
-        <p>Email: [email.val]</p>
-        <p>Role: [role.val]</p>
+        <p>Pseudo : [username.val;block=main]</p>
+        <p>Email : [email.val;block=main]</p>
+        <p>Role : [role.val;block=main]</p>
+        <p>Points : [score.val;block=main]</p>
     </main>
     <p>Modifier email : </p>
-    <form action="[onshow.cible]?route=update_email" method="post">
+    <form action="[onshow.cible]?route=update_email" method="get">
         <input type="email" name="email" placeholder="Nouvel email">
         <input type="submit" id="email_submit" value="Modifier">
     </form>
 
     <p>Modifier mot de passe : </p>
-    <form action="[onshow.cible]?route=update_password" method="post">
+    <form action="[onshow.cible]?route=update_password" method="get">
         <input type="password" name="ancient_password" placeholder="Ancien mot de passe">
         <input type="password" name="password" placeholder="Nouveau mot de passe">
         <input type="password" name="password_confirm" placeholder="Confirmer mot de passe">

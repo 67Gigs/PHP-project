@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Challenge : [onshow.title]</title>
+    <title>Challenge : [title.val;block=html]</title>
 </head>
 <body>
-    <h1>[onshow.title]</h1>
-    <p>[onshow.description]</p>
-    <p>Points à gagner : [onshow.points]</p>
-    <p>Command SSH : [onshow.SSH]</p>
-    <form action="[onshow.cible]" method="post">
+    <h1>[title.val;block=body]</h1>
+    <p>[description.val;block=body]</p>
+    <p>Points à gagner : [points.val;block=body]</p>
+    <p>Command SSH : [SSH.val;block=body]</p>
+    <form action="[onshow.cible]" method="get">
         <input type="hidden" name="route" value="challenge_process" id="route">
+        <input type="hidden" name="id" value="[id.val;block=body]" id="id">
         <label for="solution">Solution : </label>
         <input type="password" name="solution" id="solution" required>
         <input type="submit" value="Valider">
     </form>
-    <p>[onshow.valide]</p>
+    <p>[valide.val;block=body]</p>
 </body>
 </html>

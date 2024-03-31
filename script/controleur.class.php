@@ -32,7 +32,6 @@ class Appli {
         $types = [];
         $descriptions = [];
         $points = [];
-        $user = [];
         $difficulty = [];
         $id = [];
         $validated = [];
@@ -44,12 +43,11 @@ class Appli {
             $points[] = $challenge->getPoints();
             $difficulty[] = $challenge->getDifficulty();
             $id[] = $challenge->getId();
-            $user[] = $challenge->getUser();
         }
 
         // verify if the challenge is validated by the user
         foreach ($data->getAllChallenges() as $challenge) {
-            $req = "SELECT * FROM user_challenge WHERE username = '".$_SESSION['username']."' AND challenge_id = '".$challenge->getId()."'";
+            $req = "SELECT * FROM user_challenge WHERE username = '".$_SESSION['username']."' AND id_challenge = '".$challenge->getId()."'";
             $res = $this->PDO->prepare($req);
             $res->execute();
             $data = $res->fetch();
@@ -74,24 +72,37 @@ class Appli {
 
     private function challenge($id) { // page d'un challenge (avec id en paramètre)
         if (isset($_SESSION["role"]) && $_SESSION["role"] == "admin") {
-            $this->tbs->LoadTemplate("../template/challengeAdmin.tpl.html");
+            $this->tbs->LoadTemplate("../template/challengeidAdmin.tpl.html");
         } else {
-            $this->tbs->LoadTemplate("../template/challenge.tpl.html");
+            $this->tbs->LoadTemplate("../template/challengeid.tpl.html");
         }
         $data = new AccessChallenge($this->PDO);
         $challenge = $data->getChallenge($id);
         if ($challenge) {
-            $this->tbs->MergeBlock('title', $challenge->getTitle());
-            $this->tbs->MergeBlock('type', $challenge->getType());
-            $this->tbs->MergeBlock('description', $challenge->getDescription());
-            $this->tbs->MergeBlock('points', $challenge->getPoints());
-            $this->tbs->MergeBlock('difficulty', $challenge->getDifficulty());
-            $this->tbs->MergeBlock('id', $challenge->getId());
-            $this->tbs->MergeBlock('solution', $challenge->getSolution());
-            $this->tbs->MergeBlock('SSH_link', $challenge->getSSH_link());
+            $req = "SELECT * FROM user_challenge WHERE username = '".$_SESSION['username']."' AND id_challenge = '".$challenge->getId()."'";
+            $res = $this->PDO->prepare($req);
+            $res->execute();
+            $data = $res->fetch();
+            if ($data) {
+                $this->tbs->MergeBlock('valide', ["Validé"]);
+            } else {
+                $this->tbs->MergeBlock('valide', ["Non validé"]);
+            }
+
+            $this->tbs->MergeBlock('title', [$challenge->getTitle()]);
+            $this->tbs->MergeBlock('type', [$challenge->getType()]);
+            $this->tbs->MergeBlock('description', [$challenge->getDescription()]);
+            $this->tbs->MergeBlock('points', [$challenge->getPoints()]);
+            $this->tbs->MergeBlock('difficulty', [$challenge->getDifficulty()]);
+            $this->tbs->MergeBlock('id', [$challenge->getId()]);
+            $this->tbs->MergeBlock('solution', [$challenge->getSolution()]);
+            $this->tbs->MergeBlock('SSH', [$challenge->getSSH_link()]);
+            $this->tbs->Show();
+        } else {
+            $cible = $_SERVER["PHP_SELF"] . "?route=all_challenges";
+            $this->allChallenges();
         }
 
-        $this->tbs->Show();
     }
 
     private function addChallenge() { // page d'ajout de challenge (formulaire)
@@ -126,8 +137,8 @@ class Appli {
     }
 
     private function updateEmail($accUser) { // processus de mise à jour de l'email
-        if (isset($_SESSION["username"]) && isset($_POST["email"])) {
-            $accUser->updateEmail($_SESSION["username"], $_POST["email"]);
+        if (isset($_SESSION["username"]) && isset($_GET["email"])) {
+            $accUser->updateEmail($_SESSION["username"], $_GET["email"]);
             $this->profile($accUser);
         } else {
             $cible = $_SERVER["PHP_SELF"];
@@ -136,9 +147,9 @@ class Appli {
     }
 
     private function updatePassword($accUser) { // processus de mise à jour du mot de passe
-        if (isset($_SESSION["username"]) && isset($_POST["password"])) {
-            if ($accUser->getUser($_SESSION["username"])->getPassword() == $_POST["ancient_password"]) {
-                $accUser->updatePassword($_SESSION["username"], $_POST["password"]);
+        if (isset($_SESSION["username"]) && isset($_GET["password"])) {
+            if ($accUser->getUser($_SESSION["username"])->getPassword() == $_GET["ancient_password"]) {
+                $accUser->updatePassword($_SESSION["username"], $_GET["password"]);
                 $message = "Mot de passe mis à jour";
             } else {
                 $message = "Mot de passe incorrect";
@@ -174,8 +185,15 @@ class Appli {
                 break;
 
             case 'sign_process': // processus d'inscription
-                if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["email"])) {
-                    $accUser->addUser($_POST["username"], $_POST["password"], $_POST["email"]);
+                if (isset($_GET["username"]) && isset($_GET["password"]) && isset($_GET["email"])) {
+                    if ($accUser->addUser($_GET["username"], $_GET["password"], $_GET["email"])) {
+                        $message = "Inscription réussie";
+                    } else {
+                        $message = "Erreur lors de l'inscription";
+                        echo "Erreur lors de l'inscription";
+                    }
+                } else {
+                    echo "Erreur lors de l'inscription";
                 }
                 $cible = $_SERVER["PHP_SELF"];
                 $this->default();
@@ -198,7 +216,6 @@ class Appli {
                     session_destroy();
                 }
                 $cible = $_SERVER["PHP_SELF"];
-
                 $this->default();
                 break;
             
@@ -207,7 +224,8 @@ class Appli {
                 break;
 
             case 'challenge': // page d'un challenge (avec id en paramètre)
-                if (isset($_GET["id"])) {
+                if (isset($_GET["id"]) && $_GET["id"] != "") {
+
                     if (isset($_SESSION["username"])) {
                         $this->challenge($_GET["id"]);
                     } else {
@@ -215,35 +233,11 @@ class Appli {
                         $this->default();
                     }
                 } else {
-                    $cible = $_SERVER["PHP_SELF"];
-                    $this->default();
+                    $cible = $_SERVER["PHP_SELF"] . "?route=all_challenges";
+                    $this->allChallenges();
                 }
                 break;
 
-            case 'add_challenge': // page d'ajout de challenge (formulaire)
-                if (isset($_SESSION["role"]) && $_SESSION["role"] == "admin") {
-                    $this->addChallenge();
-                } else {
-                    $cible = $_SERVER["PHP_SELF"];
-                    $this->default();
-                }
-                break;
-
-            case 'add_challenge_process': // processus d'ajout de challenge
-                if (isset($_POST["title"]) && isset($_POST["type"]) && isset($_POST["description"]) && isset($_POST["points"]) && isset($_POST["solution"]) && isset($_POST["SSH_link"])) {
-                    $accChal->addChallenge($_POST["title"], $_POST["type"], $_POST["description"], $_POST["points"], $_POST["solution"], $_POST["SSH_link"]);
-                }
-                $cible = $_SERVER["PHP_SELF"];
-                $this->default();
-                break;
-            case 'remove_challenge': // processus de suppression de challenge
-                if (isset($_GET["id"]) && isset($_SESSION["role"]) && $_SESSION["role"] == "admin" ) {
-                    $accChal->removeChallenge($_GET["id"]);
-                } 
-                $cible = $_SERVER["PHP_SELF"];
-                $this->default();
-                break;
-            
             case 'challenge_process' : // processus de validation du challenge
                 if (isset($_GET["id"]) && isset($_GET["solution"])) {
                     $accChal->validateChallenge($_GET["id"], $_GET["solution"]);
@@ -255,6 +249,30 @@ class Appli {
                 $this->challenge($_GET["id"]);
                 break;
 
+            case 'add_challenge': // page d'ajout de challenge (formulaire)
+                if (isset($_SESSION["role"]) && $_SESSION["role"] == "admin") {
+                    $this->addChallenge();
+                } else {
+                    $cible = $_SERVER["PHP_SELF"] . "?route=all_challenges";
+                    $this->allChallenges();
+                }
+                break;
+
+            case 'add_challenge_process': // processus d'ajout de challenge
+                if (isset($_GET["title"]) && isset($_GET["type"]) && isset($_GET["description"]) && isset($_GET["points"]) && isset($_GET["solution"]) && isset($_GET["SSH_link"])) {
+                    $accChal->addChallenge($_GET["title"], $_GET["type"], $_GET["description"], $_GET["points"], $_GET["solution"], $_GET["SSH_link"], $_GET["difficulty"]);
+                }
+                $cible = $_SERVER["PHP_SELF"] . "?route=all_challenges";
+                $this->allChallenges();
+                break;
+
+            case 'remove_challenge': // processus de suppression de challenge
+                if (isset($_GET["id"]) && isset($_SESSION["role"]) && $_SESSION["role"] == "admin" ) {
+                    $accChal->removeChallenge($_GET["id"]);
+                } 
+                $cible = $_SERVER["PHP_SELF"] . "?route=all_challenges";
+                $this->allChallenges();
+                break;
 
             case 'add_user': // page d'ajout d'utilisateur (formulaire)
                 if (isset($_SESSION["role"]) && $_SESSION["role"] == "admin") {
@@ -266,8 +284,8 @@ class Appli {
                 break;
 
             case 'add_user_process': // processus d'ajout d'utilisateur
-                if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["email"])) {
-                    $accUser->addUser($_POST["username"], $_POST["password"], $_POST["email"]);
+                if (isset($_GET["username"]) && isset($_GET["password"]) && isset($_GET["email"])) {
+                    $accUser->addUser($_GET["username"], $_GET["password"], $_GET["email"]);
                 } else {
                     $cible = $_SERVER["PHP_SELF"];
                     $this->default();
@@ -276,7 +294,35 @@ class Appli {
                 break;
             
             case 'profile': // page de profil ou de profil admin
-                $this->profile($accUser);
+                if (isset($_SESSION["role"])) {
+                    $user = $accUser->getUser($_SESSION["username"]);
+            
+                    $username = $user->getUsername();
+                    $email = $user->getEmail();
+                    $role = $user->getRole();
+                    $score = $user->getScore();
+
+                    $username = [$username];
+                    $email = [$email];
+                    $role = [$role];
+                    $score = [$score];
+                    
+                    if ($_SESSION["role"] == "admin") {
+                        $this->tbs->LoadTemplate("../template/profileAdmin.tpl.html");
+                    } else {
+                        $this->tbs->LoadTemplate("../template/profile.tpl.html");
+                        $this->tbs->MergeBlock('score', $score);
+                    }
+                    
+                    //merge les données
+                    $this->tbs->MergeBlock('username', $username);
+                    $this->tbs->MergeBlock('email', $email);
+                    $this->tbs->MergeBlock('role', $role);
+        
+                    $this->tbs->Show();
+                } else {
+                    $this->default();
+                }
                 break;
             
             case 'delete_profile': // processus de suppression d'utilisateur
