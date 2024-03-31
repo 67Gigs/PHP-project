@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Challenge : [title.val;block=html]</title>
+    <title>Dashboard</title>
 </head>
 <body>
     <nav>
@@ -13,13 +13,17 @@
         <a href="[onshow.cible]?route=leaderboard">Voir le leaderboard</a>
     </nav>
 
-    <div>
-        <h1>[title.val;block=div]</h1>
-        <p>[description.val;block=div]</p>
-        <p>Points à gagner : [points.val;block=div]</p>
-        <p>Command SSH : [SSH.val;block=div]</p>
-        <p>Solution : [solution.val;block=div]</p>
-        <a href="[onshow.cible]?route=modif_chall?id=[id.val;block=div]">Modifier le challenge</a>
-    </div>
+    <h1>Leaderboard</h1>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Points</th>
+        </tr>
+        <tr>
+            <td>[username.val;block=tr]</td>
+            <td>[points.val;block=tr]</td>
+        </tr>
+    </table>
+    
 </body>
 </html>

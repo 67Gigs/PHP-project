@@ -195,7 +195,7 @@ class Appli {
                 } else {
                     echo "Erreur lors de l'inscription";
                 }
-                $cible = $_SERVER["PHP_SELF"];
+                header('Location: ' . $_SERVER['PHP_SELF']);
                 $this->default();
                 break;
     
@@ -207,15 +207,16 @@ class Appli {
                 if (isset($_GET["username"]) && isset($_GET["password"])) {
                     $accUser->login($_GET["username"], $_GET["password"]);
                 }
-                $cible = $_SERVER["PHP_SELF"];
+                header('Location: ' . $_SERVER['PHP_SELF']);
                 $this->default();
                 break;
 
             case 'logout': // processus de déconnexion
                 if (isset($_SESSION["username"])) {
                     session_destroy();
+                    $_COOKIE = [];
                 }
-                $cible = $_SERVER["PHP_SELF"];
+                header('Location: ' . $_SERVER['PHP_SELF']);
                 $this->default();
                 break;
             
@@ -233,19 +234,18 @@ class Appli {
                         $this->default();
                     }
                 } else {
-                    $cible = $_SERVER["PHP_SELF"] . "?route=all_challenges";
+                    header('Location: ' . $_SERVER['PHP_SELF'] . "?route=all_challenges");
                     $this->allChallenges();
                 }
                 break;
 
             case 'challenge_process' : // processus de validation du challenge
-                if (isset($_GET["id"]) && isset($_GET["solution"])) {
+                if (isset($_GET["id"]) && isset($_GET["solution"]) && isset($_SESSION["username"])) {
                     $accChal->validateChallenge($_GET["id"], $_GET["solution"]);
-                    $message = "Bravo ! Vous avez validé le challenge !";
-                } else {
-                    $message = "Dommage ! Vous n'avez pas validé le challenge !";
+                    $points = $accChal->getChallenge($_GET["id"])->getPoints();
+                    $accUser->increaseScore($_SESSION["username"], $points);            
                 }
-                $cible = $_SERVER["PHP_SELF"] . "?route=challenge&id=" . $_GET["id"];
+                header('Location: ' . $_SERVER['PHP_SELF'] . "?route=challenge&id=" . $_GET["id"]);
                 $this->challenge($_GET["id"]);
                 break;
 
@@ -253,7 +253,8 @@ class Appli {
                 if (isset($_SESSION["role"]) && $_SESSION["role"] == "admin") {
                     $this->addChallenge();
                 } else {
-                    $cible = $_SERVER["PHP_SELF"] . "?route=all_challenges";
+                    header('Location: ' . $_SERVER['PHP_SELF'] . "?route=all_challenges");
+
                     $this->allChallenges();
                 }
                 break;
@@ -262,23 +263,37 @@ class Appli {
                 if (isset($_GET["title"]) && isset($_GET["type"]) && isset($_GET["description"]) && isset($_GET["points"]) && isset($_GET["solution"]) && isset($_GET["SSH_link"])) {
                     $accChal->addChallenge($_GET["title"], $_GET["type"], $_GET["description"], $_GET["points"], $_GET["solution"], $_GET["SSH_link"], $_GET["difficulty"]);
                 }
-                $cible = $_SERVER["PHP_SELF"] . "?route=all_challenges";
+                header('Location: ' . $_SERVER['PHP_SELF'] . "?route=all_challenges");
                 $this->allChallenges();
                 break;
 
             case 'remove_challenge': // processus de suppression de challenge
                 if (isset($_GET["id"]) && isset($_SESSION["role"]) && $_SESSION["role"] == "admin" ) {
                     $accChal->removeChallenge($_GET["id"]);
-                } 
-                $cible = $_SERVER["PHP_SELF"] . "?route=all_challenges";
+                }
+                header('Location: ' . $_SERVER['PHP_SELF'] . "?route=all_challenges");
                 $this->allChallenges();
+                break;
+
+            case 'leaderboard': // page du classement
+                $this->tbs->LoadTemplate("../template/leaderboard.tpl.html");
+                $data = $accUser->getLeaderboard();
+                $usernames = [];
+                $scores = [];
+                foreach ($data as $user) {
+                    $usernames[] = $user->getUsername();
+                    $scores[] = $user->getScore();
+                }
+                $this->tbs->MergeBlock('username', $usernames);
+                $this->tbs->MergeBlock('score', $scores);
+                $this->tbs->Show();
                 break;
 
             case 'add_user': // page d'ajout d'utilisateur (formulaire)
                 if (isset($_SESSION["role"]) && $_SESSION["role"] == "admin") {
                     $this->addUser();
                 } else {
-                    $cible = $_SERVER["PHP_SELF"];
+                    header('Location: ' . $_SERVER['PHP_SELF']);
                     $this->default();
                 }
                 break;
@@ -287,7 +302,7 @@ class Appli {
                 if (isset($_GET["username"]) && isset($_GET["password"]) && isset($_GET["email"])) {
                     $accUser->addUser($_GET["username"], $_GET["password"], $_GET["email"]);
                 } else {
-                    $cible = $_SERVER["PHP_SELF"];
+                    header('Location: ' . $_SERVER['PHP_SELF']);
                     $this->default();
                 }
 
@@ -321,6 +336,7 @@ class Appli {
         
                     $this->tbs->Show();
                 } else {
+                    header('Location: ' . $_SERVER['PHP_SELF']);
                     $this->default();
                 }
                 break;
@@ -333,6 +349,8 @@ class Appli {
                 } else {
                     $message = '';
                 }
+                header('Location: ' . $_SERVER['PHP_SELF']);
+                $this->default();
                 break;
             
             case 'update_email': // processus de mise à jour de l'email
@@ -348,6 +366,7 @@ class Appli {
             
 
             default: // page d'accueil ou default a modifier pour session
+                header('Location: ' . $_SERVER['PHP_SELF']);
                 $this->default();
                 break;
         }

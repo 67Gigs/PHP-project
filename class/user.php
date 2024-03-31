@@ -60,6 +60,13 @@ class User {
 
 }
 
+class userNoPassword extends User {
+    public function __construct($username, $email) {
+        $this->username = $username;
+        $this->email = $email;
+    }
+}
+
 class AccessUser {
     private $pdo;
 
@@ -142,22 +149,6 @@ class AccessUser {
         }
     }
 
-    public function getUserChallenges($username) {
-        try {
-            $req = "SELECT * FROM challenges WHERE username = '$username'";
-            $res = $this->pdo->prepare($req);
-            $res->execute();
-            $data = $res->fetchAll();
-            $challenges = [];
-            foreach ($data as $challenge) {
-                array_push($challenges, new Challenge($challenge['id'], $challenge['username'], $challenge['title'], $challenge['description'], $challenge['points'], $challenge['solution'], $challenge['difficulty']));
-            }
-            return $challenges;
-        } catch (Exception $e) {
-            echo 'Error : ' . $e->getMessage();
-        }
-    }
-
     public function getUserScore($username) {
         try {
             $req = "SELECT score FROM users WHERE username = '$username'";
@@ -165,6 +156,22 @@ class AccessUser {
             $res->execute();
             $data = $res->fetch();
             return $data['score'];
+        } catch (Exception $e) {
+            echo 'Error : ' . $e->getMessage();
+        }
+    }
+
+    public function getLeaderboard() {
+        try {
+            $req = "SELECT * FROM users ORDER BY score DESC";
+            $res = $this->pdo->prepare($req);
+            $res->execute();
+            $data = $res->fetchAll();
+            $users = [];
+            foreach ($data as $user) {
+                array_push($users, new userNoPassword($user['username'], $user['email']));
+            }
+            return $users;
         } catch (Exception $e) {
             echo 'Error : ' . $e->getMessage();
         }
@@ -183,6 +190,12 @@ class AccessUser {
         } else {
             header('Location: controleur.php?route=login');
         }
+    }
+
+    public function increaseScore($username, $points) {
+        $req = "UPDATE users SET score = score + $points WHERE username = '$username'";
+        $res = $this->pdo->prepare($req);
+        $res->execute();
     }
 
 }
