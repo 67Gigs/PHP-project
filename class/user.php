@@ -6,7 +6,6 @@ class User {
     private $password;
     private $email;
     private $role = 'user';
-    private $challenges = [];
     private $score = 0;
 
     public function __construct($username, $password, $email) {
@@ -31,23 +30,8 @@ class User {
         return $this->role;
     }
 
-    public function getChallenges() {
-        return $this->challenges;
-    }
-
     public function getScore() {
         return $this->score;
-    }
-
-    public function addChallenge($challenge) {
-        array_push($this->challenges, $challenge);
-    }
-
-    public function removeChallenge($challenge) {
-        $key = array_search($challenge, $this->challenges);
-        if ($key !== false) {
-            unset($this->challenges[$key]);
-        }
     }
 
     public function updateScore($points) {
@@ -58,12 +42,19 @@ class User {
         return ($this->password == $password);
     }
 
+    public function setRole($role) {
+        $this->role = $role;
+    }
+
 }
 
 class userNoPassword extends User {
-    public function __construct($username, $email) {
+    public function __construct($username, $email, $score = 0) {
         $this->username = $username;
         $this->email = $email;
+        $this->score = (int) $score;
+        $this->role = 'user';
+        $this->password = '';
     }
 }
 
@@ -110,7 +101,7 @@ class AccessUser {
         }
     }
 
-    public function updatePassword ($username, $password) {
+    public function updatePassword($username, $password) {
         try {
             $req = "UPDATE users SET password = '$password' WHERE username = '$username'";
             $res = $this->pdo->prepare($req);
@@ -127,6 +118,7 @@ class AccessUser {
             $res->execute();
             $data = $res->fetch();
             $user = new User($data['username'], $data['password'], $data['email']);
+            $user->setRole($data['role']);
             return $user;
         } catch (Exception $e) {
             echo 'Error : ' . $e->getMessage();
@@ -166,10 +158,15 @@ class AccessUser {
             $req = "SELECT * FROM users ORDER BY score DESC";
             $res = $this->pdo->prepare($req);
             $res->execute();
-            $data = $res->fetchAll();
             $users = [];
-            foreach ($data as $user) {
-                array_push($users, new userNoPassword($user['username'], $user['email']));
+            while ($user = $res->fetch()) {
+                if ($user['role'] == 'admin' || $user['score'] == 0) {
+                    continue;
+                }
+                $userN = new User($user['username'], $user['password'], $user['email']);
+                $userN->setRole($user['role']);
+                $userN->updateScore($user['score']);
+                array_push($users, $userN);
             }
             return $users;
         } catch (Exception $e) {

@@ -46,16 +46,21 @@ class Appli {
         }
 
         // verify if the challenge is validated by the user
-        foreach ($data->getAllChallenges() as $challenge) {
-            $req = "SELECT * FROM user_challenge WHERE username = '".$_SESSION['username']."' AND id_challenge = '".$challenge->getId()."'";
-            $res = $this->PDO->prepare($req);
-            $res->execute();
-            $data = $res->fetch();
-            if ($data) {
-                $validated[] = "Validé";
-            } else {
-                $validated[] = "Non validé";
+        if (isset($_SESSION["username"])) {
+            foreach ($data->getAllChallenges() as $challenge) {
+                $req = "SELECT * FROM user_challenge WHERE username = '".$_SESSION['username']."' AND id_challenge = '".$challenge->getId()."'";
+                $res = $this->PDO->prepare($req);
+                $res->execute();
+                $data = $res->fetch();
+                if ($data) {
+                    $validated[] = "Validé";
+                } else {
+                    $validated[] = "Non validé";
+                }
             }
+            $this->tbs->MergeBlock('valide', $validated);
+        } else {
+            $this->tbs->MergeBlock('valide', [""]);
         }
 
         $this->tbs->MergeBlock('title', $titles);
@@ -64,7 +69,6 @@ class Appli {
         $this->tbs->MergeBlock('points', $points);
         $this->tbs->MergeBlock('difficulty', $difficulty);
         $this->tbs->MergeBlock('id', $id);
-        $this->tbs->MergeBlock('valide', $validated);
 
         
         $this->tbs->Show();
@@ -241,9 +245,10 @@ class Appli {
 
             case 'challenge_process' : // processus de validation du challenge
                 if (isset($_GET["id"]) && isset($_GET["solution"]) && isset($_SESSION["username"])) {
-                    $accChal->validateChallenge($_GET["id"], $_GET["solution"]);
-                    $points = $accChal->getChallenge($_GET["id"])->getPoints();
-                    $accUser->increaseScore($_SESSION["username"], $points);            
+                    if ($accChal->validateChallenge($_GET["id"], $_GET["solution"])) {
+                        $points = $accChal->getChallenge($_GET["id"])->getPoints();
+                        $accUser->increaseScore($_SESSION["username"], $points);    
+                    }
                 }
                 header('Location: ' . $_SERVER['PHP_SELF'] . "?route=challenge&id=" . $_GET["id"]);
                 $this->challenge($_GET["id"]);
@@ -315,7 +320,7 @@ class Appli {
                     $username = $user->getUsername();
                     $email = $user->getEmail();
                     $role = $user->getRole();
-                    $score = $user->getScore();
+                    $score = $accUser->getUserScore($_SESSION["username"]);
 
                     $username = [$username];
                     $email = [$email];
@@ -366,7 +371,6 @@ class Appli {
             
 
             default: // page d'accueil ou default a modifier pour session
-                header('Location: ' . $_SERVER['PHP_SELF']);
                 $this->default();
                 break;
         }

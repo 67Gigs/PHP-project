@@ -6,17 +6,21 @@
     <title>Challenges</title>
 </head>
 <body>
-    <nav></nav>
+    <nav>
+        <a href="[onshow.cible]?route=logout">Se déconnecter</a>
+        <a href="[onshow.cible]?route=profile">Voir mon profil</a>
+        <a href="[onshow.cible]?route=all_challenges">Voir les challenges</a>
+        <a href="[onshow.cible]?route=leaderboard">Voir le leaderboard</a>
+    </nav>
     <main>
         <h1>Challenges</h1>
         <a href="[onshow.cible]?route=add_challenge">Ajouter</a>
         <div>
-            <a href="[onshow.cible]?route=challenge&id=[id.val;block=main]" class="lien-challenge">
+            <a href="[onshow.cible]?route=challenge&id=[id.val;block=div]" class="lien-challenge">
                 <h2>[title.val;block=div]</h2>
                 <p>[type.val;block=div]</p>
                 <p>[difficulty.val;block=div]</p>
-                <p>[valide.val;block=div]</p>
-                <a href="[onshow.cible]?route=remove_challenge&id=[id.val;block=a]">Supprimer</a>
+                <a href="[onshow.cible]?route=remove_challenge&id=[id.val;block=div]">Supprimer</a>
             </a>
         </div>
     </main>

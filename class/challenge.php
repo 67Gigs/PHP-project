@@ -9,10 +9,10 @@ class Challenge {
     private $solution;
     private $SSH_link;
     private $users = [];
-    private $difficulty = 0;
+    private $difficulty = "easy";
     private $validation = '';
 
-    public function __construct($title, $type, $description, $points, $solution, $SSH_link, $difficulty, $id) {
+    public function __construct($title, $type = "default", $description, $points, $solution, $SSH_link, $difficulty, $id) {
         $this->title = $title;
         $this->type = $type;
         $this->description = $description;
@@ -128,18 +128,10 @@ class AccessChallenge {
         $res = $this->pdo->prepare($req);
         $res->execute();
         $data = $res->fetchAll();
-        $req = "SELECT * FROM user_challenge WHERE username = '".$_SESSION['username']."'";
-        $res = $this->pdo->prepare($req);
-        $res->execute();
-        $data2 = $res->fetchAll();
+        
         $challenges = [];
         foreach($data as $row) {
             $challenge = new Challenge($row['title'], $row['type'], $row['description'], $row['points'], $row['solution'], $row['SSH_link'], $row['difficulty'], $row['id']);
-            foreach($data2 as $row2) {
-                if ($row['id'] == $row2['id_challenge']) {
-                    $challenge->addUser($_SESSION['username']);
-                }
-            }
             array_push($challenges, $challenge);
         }
 
@@ -148,6 +140,13 @@ class AccessChallenge {
 
     public function validateChallenge ($id, $solution) {
         $challenge = $this->getChallenge($id);
+        $req = "SELECT * FROM user_challenge WHERE username = '".$_SESSION['username']."' AND id_challenge = '".$id."'";
+        $res = $this->pdo->prepare($req);
+        $res->execute();
+        $data = $res->fetch();
+        if ($data) {
+            return false;
+        }
         if ($challenge->compareSolution($solution)) {
             $req = "INSERT INTO user_challenge (username, id_challenge) VALUES ('".$_SESSION['username']."', '".$id."')";
             $res = $this->pdo->prepare($req);
