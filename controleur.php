@@ -8,10 +8,7 @@ require('./class/function.php');
 require('./config.php');
 require('./script/controleur.class.php');
 
-
 $tbs = new clsTinyButStrong;
-$tbs->SetOption(array('var_mode' => 0));
-
 
 try {
     $PDO = new PDO("mysql:host=$host;dbname=$dbname", $login, $password);

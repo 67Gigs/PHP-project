@@ -3,18 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log in</title>
+    <link rel="stylesheet" href="../style/style.css">
+    <title>Connectez vous</title>
 </head>
-<body>
-    <a href="[onshow.cible]">Page d'accueil</a>
-    <form action="[onshow.cible]" method="get">
-        <input type="hidden" name="route" value="login_process" id="route">
-        <label for="username">Pseudo</label>
-        <input type="text" name="username" id="username">
-        <label for="password">Mot de passe</label>
-        <input type="password" name="password" id="password">
-        <input type="submit" value="Se connecter">
-    </form>
-    <a href="[onshow.cible]?route=sign">S'inscrire</a>
+<body class="space-between">
+    <main>
+        <nav class="full-center m-30"><a href="[onshow.cible]"><img src="../assets/logo.png" alt="logo" class="logo"></a></nav>
+        <form class="full-center gap-1" action="[onshow.cible]" method="get">
+            <input type="hidden" name="route" value="login_process" id="route">
+
+            <h1>Connectez vous</h1>
+
+            <input type="text" placeholder="Email" name="username" id="username">
+            <input type="password" placeholder="Mot de passe" name="password" id="password">
+            
+            <input type="submit" class="submit" value="Se connecter">
+            <a href="[onshow.cible]?route=sign">S'inscrire</a>
+        </form>
+    </main>
+    <footer class="full-center">
+        <p>© 2024 , All rights reserved, Noureddine BEN SADOK & Nina ....Nom</p>
+    </footer>
 </body>
 </html>
