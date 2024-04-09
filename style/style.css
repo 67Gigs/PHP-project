@@ -7,6 +7,7 @@ a {
 
 a:hover {
     color: #9fef00;
+    transition: all 0.3s;
 }
 
 form {
@@ -57,7 +58,7 @@ input, select {
     justify-content: space-between;
 }
 
-body, html {
+header ,body, html {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -78,19 +79,23 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 90%;
     height: 130px;
     padding: 0px 20px;
     box-sizing: border-box;
+    margin-top: 5px;
 }
 
 footer {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 70%;
     height: 80px;
     background-color: transparent;
+    color: rgb(164, 177, 205);
+    flex-direction: column;
+    padding-bottom: 20px;
 }
 
 .logo {
@@ -115,6 +120,10 @@ footer {
     text-decoration: none;
 }
 
+.link {
+    color: white;
+}
+
 .submit {
     background-color: rgb(159, 239, 0);
     color: rgb(18, 25, 38);
@@ -131,4 +140,46 @@ input:active {
 
 .m-30 {
     margin: 30px 0;
+}
+
+.sign {
+    background-color: #9fef00;
+    padding: 10px 20px;
+    border-radius: 2px;
+    color: black;
+}
+
+
+.sign:hover {
+    background-color: #c3ff4a;
+    color: black;
+    transition: all 0.3s;
+}
+
+.login {
+    background-color: rgb(26, 35, 50);
+    padding: 10px 20px;
+    border-radius: 2px;
+}
+
+
+.space-around {
+    justify-content: space-around;
+    width: 100%;
+}
+
+.back {
+    background-color: #f5f5f5;
+    padding: 25px;
+    border-radius: 2px;
+    color: black;
+}
+
+.layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 1rem;
+
 }
