@@ -17,6 +17,7 @@ form {
     border-radius: 4px;
     display: flex;
     flex-direction: column;
+    padding-bottom: 30px;
 }
 
 input, select {

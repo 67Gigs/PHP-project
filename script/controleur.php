@@ -1,12 +1,12 @@
 <?php
 
 session_start();
-require('./class/tbs_class.php');
-require('./class/user.php');
-require('./class/challenge.php');
-require('./class/function.php');
-require('./config.php');
-require('./script/controleur.class.php');
+require('../class/tbs_class.php');
+require('../class/user.php');
+require('../class/challenge.php');
+require('../class/functions.php');
+require('../config.php');
+require('../script/controleur.class.php');
 
 $tbs = new clsTinyButStrong;
 
