@@ -9,37 +9,62 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="space-between">
 
-    <nav>
-        <a href="[onshow.cible]?route=home">Home</a>
-        <a href="[onshow.cible]?route=all_challenges">Challenges</a>
-        <a href="[onshow.cible]?route=profile">Profile</a>
-        <a href="[onshow.cible]?route=logout">Logout</a>
-    </nav>
+    <header>
+        <nav>
+            <a href="[onshow.cible]" class="logo-container">
+                <img src="../assets/logo.png" alt="image logo" class="logo">
+            </a>
+            <div class="center gap-2">
+                <a href="[onshow.cible]?route=all_challenges" class="link">Challenges</a>
+                <a href="[onshow.cible]?route=leaderboard" class="link">Classement</a>
+            </div>
+            <div class="auth gap-1 full-center">
+                <a href="[onshow.cible]?route=profile" class="auth-link">Voir mon profil</a>
+                <a href="[onshow.cible]?route=logout" class="auth-link">Se déconnecter</a>
+            </div>
+        </nav>
+        <section class="row space-between">
+            <div>
+                <h1>Profile</h1>
+                <p>Pseudo : [username.val;block=section]</p>
+                <p>Email : [email.val;block=section]</p>
+                <p>Role : [role.val;block=section]</p>
+                <p>Points : [score.val;block=section]</p>
+            </div>
+            <div>
+                <a href="[onshow.cible]?route=delete_profile" class="remove">Supprimer le compte</a>
+            </div>
+        </section>
+        <section class="row gap-2 full-center">
+            <div>
+                <h2>Modifier email : </h2>
+                <form action="[onshow.cible]?route=update_email" method="get">
+                    <input type="email" name="email" placeholder="Nouvel email">
+                    <input type="submit" class="submit valide" id="email_submit" value="Modifier">
+                </form>
+            </div>
+            <div>
+                <h2>Modifier mot de passe : </h2>
+                <form action="[onshow.cible]?route=update_password" method="get">
+                    <input type="password" name="ancient_password" placeholder="Ancien mot de passe">
+                    <input type="password" name="password" placeholder="Nouveau mot de passe">
+                    <input type="password" name="password_confirm" placeholder="Confirmer mot de passe">
+                    <input type="submit" class="submit valide" id="password_submit" value="Modifier">
+                </form>
+            </div>
+        </section>
+        <section>
+        </section>
 
-    <main>
-        <h1>Profile</h1>
-        <p>Pseudo : [username.val;block=main]</p>
-        <p>Email : [email.val;block=main]</p>
-        <p>Role : [role.val;block=main]</p>
-        <p>Points : [score.val;block=main]</p>
-    </main>
-    <p>Modifier email : </p>
-    <form action="[onshow.cible]?route=update_email" method="get">
-        <input type="email" name="email" placeholder="Nouvel email">
-        <input type="submit" id="email_submit" value="Modifier">
-    </form>
+    </header>
 
-    <p>Modifier mot de passe : </p>
-    <form action="[onshow.cible]?route=update_password" method="get">
-        <input type="password" name="ancient_password" placeholder="Ancien mot de passe">
-        <input type="password" name="password" placeholder="Nouveau mot de passe">
-        <input type="password" name="password_confirm" placeholder="Confirmer mot de passe">
-        <input type="submit" id="password_submit" value="Modifier">
-    </form>
+    
+    
 
-    <a href="[onshow.cible]?route=delete_profile">Supprimer</a>
+    
+
 
     <footer>
         <p>© 2024, All rights reserved, Noureddine BEN SADOK & Nina DORRY</p>

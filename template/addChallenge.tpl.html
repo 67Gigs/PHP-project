@@ -16,7 +16,7 @@
                 <img src="../assets/logo.png" alt="image logo" class="logo">
             </a>
             <div class="center gap-2">
-                <a href="[onshow.cible]?route=" class="link">Challenges</a>
+                <a href="[onshow.cible]?route=all_challenges" class="link">Challenges</a>
                 <a href="[onshow.cible]?route=leaderboard" class="link">Classement</a>
             </div>
             <div class="auth gap-1 full-center">
@@ -30,37 +30,36 @@
                 <input type="hidden" name="route" value="add_challenge_process">
                 <h1>Ajouter un challenge</h1>
                 <input type="text" placeholder="Titre" name="title" id="title" required>
-                <label for="description">Description</label>
-                <input type="text" name="description" id="description" required>
-                <label for="points">Points</label>
-                <input type="number" name="points" id="points" required>
-                <label for="type">Type</label>
-                <select name="type" id="type">
-                    <option value="CTF">CTF</option>
-                    <option value="Web">Web</option>
-                    <option value="Forensic">Forensic</option>
-                    <option value="Reverse">Reverse</option>
-                    <option value="Crypto">Crypto</option>
-                    <option value="Pwn">Pwn</option>
-                    <option value="Misc">Misc</option>
-                </select>
-                <label for="difficulty">Difficulty</label>
-                <select name="difficulty" id="difficulty">
-                    <option value="Facile">Facile</option>
-                    <option value="Moyen">Moyen</option>
-                    <option value="Difficile">Difficile</option>
-                </select>
+                <input type="text" placeholder="Description" name="description" id="description" required>
+                <input type="number" placeholder="Points" name="points" id="points" required>
+                <div>
+                    <label for="type">Type :</label>
+                    <select name="type" id="type">
+                        <option value="CTF">CTF</option>
+                        <option value="Web">Web</option>
+                        <option value="Forensic">Forensic</option>
+                        <option value="Reverse">Reverse</option>
+                        <option value="Crypto">Crypto</option>
+                        <option value="Pwn">Pwn</option>
+                        <option value="Misc">Misc</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="difficulty">Difficulté :</label>
+                    <select name="difficulty" id="difficulty">
+                        <option value="Facile">Facile</option>
+                        <option value="Moyen">Moyen</option>
+                        <option value="Difficile">Difficile</option>
+                    </select>
+                </div>
 
+                <input type="text" placeholder="Commande SSH/lien" name="SSH_link" id="SSH_link" required>
 
-                <label for="SSH_link">Commande SSH</label>
-                <input type="text" name="SSH_link" id="SSH_link" required>
-
-                <label for="solution">Solution</label>
-                <input type="text" name="solution" id="solution" required>
+                <input type="text" placeholder="Solution" name="solution" id="solution" required>
 
                 <div class="layout">
                     <a class="back" href="[onshow.cible]?route=all_challenges">Retour</a>
-                    <input type="submit" class="submit" value="Ajouter">
+                    <input type="submit" class="submit and" value="Ajouter">
                 </div>
             </form>
         </main>
