@@ -165,6 +165,11 @@ class Appli {
         }
     }
 
+    private function contacte() {
+        $this->tbs->LoadTemplate("../template/contacte.tpl.html");
+        $this->tbs->Show();
+    }
+
     private function default() { // page d'accueil
         if (isset($_SESSION["username"])) {
             $this->tbs->LoadTemplate("../template/accueilLogged.tpl.html");
@@ -280,6 +285,14 @@ class Appli {
                 $this->allChallenges();
                 break;
 
+            case 'update_challenge':
+                if (isset($_GET["id"]) && isset($_GET["title"]) && isset($_GET["type"]) && isset($_GET["description"]) && isset($_GET["points"]) && isset($_GET["solution"]) && isset($_GET["SSH_link"])) {
+                    $accChal->updateChallenge($_GET["id"], $_GET["title"], $_GET["type"], $_GET["description"], $_GET["points"], $_GET["solution"], $_GET["SSH_link"], $_GET["difficulty"]);
+                }
+                header('Location: ' . $_SERVER['PHP_SELF'] . "?route=all_challenges");
+                $this->allChallenges();
+                break;
+
             case 'leaderboard': // page du classement
                 $this->tbs->LoadTemplate("../template/leaderboard.tpl.html");
                 $data = $accUser->getLeaderboard();
@@ -365,9 +378,9 @@ class Appli {
             case 'update_password': // processus de mise à jour du mot de passe
                 $this->updatePassword($accUser);
                 break;
-            
-            
-            
+            case 'contacte':
+                $this->contacte();
+                break;
             
 
             default: // page d'accueil ou default a modifier pour session

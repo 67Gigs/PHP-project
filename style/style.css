@@ -21,7 +21,7 @@ form {
     padding-bottom: 30px;
 }
 
-input, select {
+input, select, textarea {
     padding: 20px;
     margin: 0.5rem 0;
     border-radius: 4px;
@@ -54,6 +54,7 @@ input, select {
 }
 
 .space-between {
+    display: flex;
     justify-content: space-between;
 }
 
@@ -108,11 +109,21 @@ footer {
 }
 
 .column {
+    display: flex;
     flex-direction: column;
 }
 
 .row {
+    display: flex;
     flex-direction: row;
+}
+
+.justfiy-center {
+    justify-content: center;
+}
+
+.align-center {
+    align-items: center;
 }
 
 .auth-link {
@@ -124,8 +135,9 @@ footer {
     color: white;
 }
 
-input:active {
+input:focus, select:focus, textarea:focus{
     border: none;
+    outline: none;
 }
 
 .m-30 {
