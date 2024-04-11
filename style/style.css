@@ -295,3 +295,11 @@ tr {
     border-radius: 4px;
     margin-top: 10px;
 }
+
+.not-valide {
+    color: rgb(228, 81, 81);
+}
+
+.validated {
+    color: #9fef00;
+}
