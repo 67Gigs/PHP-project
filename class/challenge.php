@@ -115,12 +115,13 @@ class AccessChallenge {
             return $e->getMessage();
         }
     }
-    public function updateChallenge($id, $title, $type, $description, $points, $solution, $SSH_link) {
+    public function updateChallenge($id, $title, $type, $description, $points, $solution, $SSH_link, $difficulty) {
         try {
-            $req = "UPDATE challenge SET title = '".$title."', type = '".$type."', description = '".$description."', points = '".$points."', solution = '".$solution."', SSH_link = '".$SSH_link."' WHERE id = '".$id."'";
+            $req = "UPDATE challenge SET title = '".$title."', type = '".$type."', description = '".$description."', points = '".$points."', solution = '".$solution."', SSH_link = '".$SSH_link."', difficulty = '".$difficulty."' WHERE id = '".$id."'";
             $res = $this->pdo->prepare($req);
             $res->execute();
         } catch (PDOException $e) {
+            header('Location: ../error.php');
             return $e->getMessage();
         }
     }

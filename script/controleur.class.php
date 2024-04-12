@@ -286,8 +286,8 @@ class Appli {
                 break;
 
             case 'update_challenge':
-                if (isset($_GET["id"]) && isset($_GET["title"]) && isset($_GET["type"]) && isset($_GET["description"]) && isset($_GET["points"]) && isset($_GET["solution"]) && isset($_GET["SSH_link"])) {
-                    $accChal->updateChallenge($_GET["id"], $_GET["title"], $_GET["type"], $_GET["description"], $_GET["points"], $_GET["solution"], $_GET["SSH_link"], $_GET["difficulty"]);
+                if (isset($_GET["id"]) && isset($_SESSION["role"]) && $_SESSION["role"] == "admin") {
+                    $accChal->updateChallenge($_GET["id"], $_GET["title"], $_GET["type"], $_GET["description"], $_GET["points"], $_GET["solution"], $_GET["command"], $_GET["difficulty"]);
                 }
                 header('Location: ' . $_SERVER['PHP_SELF'] . "?route=all_challenges");
                 $this->allChallenges();
