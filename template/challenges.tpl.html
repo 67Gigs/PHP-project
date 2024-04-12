@@ -10,16 +10,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 
     <script>
-        const challengesValidator = () => {
-            const challenges_valide = document.querySelectorAll('.challenges-valide')
+        function challengesValidator() {
+            const challenges_valide = document.querySelectorAll('.challenges-valide');
             challenges_valide.forEach((challenge) => {
+                console.log(challenge.innerHTML)
               if (challenge.innerHTML === 'Validé') {
-                challenge.classList.add('valide')
+                challenge.classList.add('validated')
               } else {
-                challenge.classList.add('not-validated')
+                challenge.classList.add('not-valide')
               }
             })
         }
+        
+        window.addEventListener('load', challengesValidator)
     </script>
 </head>
 <body class="space-between">

@@ -8,6 +8,52 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script>
+        function emailValidate() {
+            const email = document.querySelector('input[name="email"]');
+            const email_submit = document.getElementById('email_submit');
+            email.addEventListener('input', () => {
+                if (email.value.length > 0) {
+                    email_submit.disabled = false;
+                } else {
+                    email_submit.disabled = true;
+                }
+            })
+        }
+
+        function passwordValidate() {
+            const password = document.querySelector('input[name="password"]');
+            const password_confirm = document.querySelector('input[name="password_confirm"]');
+            const password_submit = document.getElementById('password_submit');
+            const ancient_password = document.querySelector('input[name="ancient_password"]');
+            ancient_password.addEventListener('input', () => {
+                if (password.value.length > 0 && password_confirm.value.length > 0 && password_confirm.value === password.value) {
+                    password_submit.disabled = false;
+                } else {
+                    password_submit.disabled = true;
+                }
+            })
+            password.addEventListener('input', () => {
+                if (password.value.length > 0 && password_confirm.value.length > 0 && password_confirm.value === password.value) {
+                    password_submit.disabled = false;
+                } else {
+                    password_submit.disabled = true;
+                }
+            })
+            password_confirm.addEventListener('input', () => {
+                if (password.value.length > 0 && password_confirm.value.length > 0 && password_confirm.value === password.value) {
+                    password_submit.disabled = false;
+                } else {
+                    password_submit.disabled = true;
+                }
+            })
+        }
+
+        window.addEventListener('load', emailValidate);
+        window.addEventListener('load', passwordValidate);
+
+    </script>
+
 </head>
 <body class="space-between">
 
@@ -42,16 +88,16 @@
                 <h2>Modifier email : </h2>
                 <form action="[onshow.cible]?route=update_email" method="get">
                     <input type="email" name="email" placeholder="Nouvel email">
-                    <input type="submit" class="submit valide" id="email_submit" value="Modifier">
+                    <input type="submit" class="submit valide" disabled id="email_submit" value="Modifier">
                 </form>
             </div>
             <div>
                 <h2>Modifier mot de passe : </h2>
                 <form action="[onshow.cible]?route=update_password" method="get">
-                    <input type="password" name="ancient_password" placeholder="Ancien mot de passe">
-                    <input type="password" name="password" placeholder="Nouveau mot de passe">
-                    <input type="password" name="password_confirm" placeholder="Confirmer mot de passe">
-                    <input type="submit" class="submit valide" id="password_submit" value="Modifier">
+                    <input type="password" name="ancient_password" placeholder="Ancien mot de passe" required>
+                    <input type="password" name="password" placeholder="Nouveau mot de passe" required>
+                    <input type="password" name="password_confirm" placeholder="Confirmer mot de passe" required>
+                    <input type="submit" class="submit valide" disabled id="password_submit" value="Modifier">
                 </form>
             </div>
         </section>

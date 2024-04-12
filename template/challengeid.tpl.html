@@ -13,12 +13,13 @@
             const valide = document.getElementById("valide");
             console.log('pass');
             if (valide.innerHTML === 'Validé') {
-              valide.classList.add('valide');
+              valide.classList.add('validated');
             } else {
-              valide.classList.add('not-validated');
+              valide.classList.add('not-valide');
             }
           }
-        window.onload = challengeValidator();
+
+          window.addEventListener('load', challengeValidator);
     </script>
 
 </head>
