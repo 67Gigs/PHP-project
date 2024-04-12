@@ -361,8 +361,8 @@ class Appli {
             
             case 'delete_profile': // processus de suppression d'utilisateur
                 if (isset($_SESSION['role']) && $_SESSION['role'] ) {
-                    $accUser->logout();
-                    $accUser->deleteUser($_SESSION['username']);
+                    session_destroy();
+                    $accUser->removeUser($_SESSION['username']);
                     $message = '';
                 } else {
                     $message = '';
