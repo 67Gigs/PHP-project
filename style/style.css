@@ -298,6 +298,7 @@ tr {
 
 .not-valide {
     color: rgb(228, 81, 81);
+    text-decoration: line-through;
 }
 
 .validated {

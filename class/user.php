@@ -48,16 +48,6 @@ class User {
 
 }
 
-class userNoPassword extends User {
-    public function __construct($username, $email, $score = 0) {
-        $this->username = $username;
-        $this->email = $email;
-        $this->score = (int) $score;
-        $this->role = 'user';
-        $this->password = '';
-    }
-}
-
 class AccessUser {
     private $pdo;
 
@@ -175,24 +165,32 @@ class AccessUser {
     }
 
     public function login($username, $password) {
-        $req = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
-        $res = $this->pdo->prepare($req);
-        $res->execute();
-        $data = $res->fetch();
-        if ($data) {
-            $_SESSION['username'] = $username;
-            $_SESSION['role'] = $data['role'];
-            $_SESSION['score'] = $data['score'];
-            header('Location: controleur.php');
-        } else {
-            header('Location: controleur.php?route=login');
+        try {
+            $req = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
+            $res = $this->pdo->prepare($req);
+            $res->execute();
+            $data = $res->fetch();
+            if ($data) {
+                $_SESSION['username'] = $username;
+                $_SESSION['role'] = $data['role'];
+                $_SESSION['score'] = $data['score'];
+                header('Location: controleur.php');
+            } else {
+                header('Location: controleur.php?route=login');
+            }
+        } catch (Exception $e) {
+            echo 'Error : ' . $e->getMessage();
         }
     }
 
     public function increaseScore($username, $points) {
-        $req = "UPDATE users SET score = score + $points WHERE username = '$username'";
-        $res = $this->pdo->prepare($req);
-        $res->execute();
+        try {
+            $req = "UPDATE users SET score = score + $points WHERE username = '$username'";
+            $res = $this->pdo->prepare($req);
+            $res->execute();
+        } catch (Exception $e) {
+            echo 'Error : ' . $e->getMessage();
+        }
     }
 
 }
