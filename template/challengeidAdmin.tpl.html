@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,52 +10,40 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 </head>
+
 <body class="space-between">
     <header>
         <nav>
             <a href="[onshow.cible]" class="logo-container">
                 <img src="../assets/logo.png" alt="image logo" class="logo">
             </a>
-            <div class="center gap-2">
+            <div class="auth center gap-2">
                 <a href="[onshow.cible]?route=all_challenges" class="link">Challenges</a>
                 <a href="[onshow.cible]?route=leaderboard" class="link">Classement</a>
             </div>
             <div class="auth gap-1 full-center">
-                <a href="[onshow.cible]?route=profile" class="auth-link">Voir mon profil</a>
-                <a href="[onshow.cible]?route=logout" class="auth-link">Se déconnecter</a>
+                <a href="[onshow.cible]?route=profile" class="auth-link profil">Voir mon profil</a>
+                <a href="[onshow.cible]?route=logout" class="auth-link login">Se déconnecter</a>
             </div>
         </nav>
-        <section class="space-between full-center gap-2 row">
-            <section class="solution">
-                <h1>[title.val;block=section]</h1>
-                <p>[description.val;block=section]</p>
-                <p>Points à gagner : [points.val;block=section]</p>
-                <p>Command SSH : [SSH.val;block=section]</p>
-                <p>Solution : [solution.val;block=section]</p>
-                <a href="[onshow.cible]?route=modif_chall?id=[id.val;block=section]" class="submit valide" >Modifier le challenge</a>
-            </section>
-
-            <section>
-                <form action="[onshow.cible]">
-                    <h1>Modifier le challenge</h1>
-                    <input type="hidden" name="route" value="update_challenge" id="route">
-                    <input type="hidden" name="id" value="[id.val;block=section]" id="id">
-                    <input type="text" placeholder="Titre" name="title" id="title" value="[title.val;block=section]">
-                    <textarea placeholder="Description" name="description" id="description">[description.val;block=section]</textarea>
-                    <input type="number" placeholder="Points" name="points" id="points" value="[points.val;block=section]">
-                    <input type="text" placeholder="Commande SSH" name="command" id="command" value="[SSH.val;block=section]">
-                    <input type="text" placeholder="Solution" name="solution" id="solution" value="[solution.val;block=section]">
-                    <input type="submit" class="submit valide" value="Valider le challenge">
-
-                </form>
-            </section>
+        <section>
+            <a id="retour" href="[onshow.cible]?route=all_challenges">Retour</a>
+            <br>
+            <h1>[title.val;block=section]</h1>
+            <p>[description.val;block=section]</p>
+            <p class="info">Points à gagner : [points.val;block=section]</p>
+            <p class="info">Command SSH : [SSH.val;block=section]</p>
+            <br>
+            <p>Solution : [solution.val;block=section]</p><br>
+            <a href="[onshow.cible]?route=modif_chall?id=[id.val;block=section]" class="modif" >Modifier le challenge</a>
         </section>
     </header>
 
     <footer class="full-center">
-        <p>© 2024 , All rights reserved, Noureddine BEN SADOK & Nina DORRY</p>
-        <a href="[onshow.cible]?route=contacte">Contacte</a>
+        <p>© 2024 , All rights reserved, Noureddine BEN SADOK & Nina DORRY<br>
+        <a href="[onshow.cible]?route=contacte">Contacte</a></p>
     </footer>
 
 </body>
+
 </html>
