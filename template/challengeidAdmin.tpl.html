@@ -24,50 +24,52 @@
                 <a href="[onshow.cible]?route=logout" class="auth-link">Se déconnecter</a>
             </div>
         </nav>
-        <section class="space-between full-center gap-2 row">
-            <section class="solution">
-                <h1>[title.val;block=section]</h1>
-                <p>[description.val;block=section]</p>
-                <p>Points à gagner : [points.val;block=section]</p>
-                <p>Command SSH : [SSH.val;block=section]</p>
-                <p>Solution : [solution.val;block=section]</p>
-                <p>Type : [type.val;block=section]</p>
-                <p>Difficulté : [difficulty.val;block=section]</p>
-            </section>
-            <section>
-                <form action="[onshow.cible]" method="GET">
-                    <h1>Modifier le challenge</h1>
-                    <input type="hidden" name="route" value="update_challenge">
-                    <input type="hidden" name="id" value="[id.val;block=form]" id="id">
-                    <input type="text" placeholder="Titre" name="title" id="title" required>
-                    <input type="text" placeholder="Description" name="description" id="description" required></input>
-                    <input type="number" placeholder="Points" name="points" id="points" required>
-                    <div>
-                        <label for="type">Type :</label>
-                        <select name="type" id="type">
-                            <option value="CTF">CTF</option>
-                            <option value="Web">Web</option>
-                            <option value="Forensic">Forensic</option>
-                            <option value="Reverse">Reverse</option>
-                            <option value="Crypto">Crypto</option>
-                            <option value="Pwn">Pwn</option>
-                            <option value="Misc">Misc</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="difficulty">Difficulté :</label>
-                        <select name="difficulty" id="difficulty">
-                            <option value="Facile">Facile</option>
-                            <option value="Moyen">Moyen</option>
-                            <option value="Difficile">Difficile</option>
-                        </select>
-                    </div>
-                    <input type="text" placeholder="Commande SSH" name="command" id="command" required>
-                    <input type="text" placeholder="Solution" name="solution" id="solution" required>
-                    <input type="submit" class="submit valide" value="Valider la modification">
-                </form>
-            </section>
-            
+        <section class="space-between full-center column">
+            <h1>Challenge</h1>
+            <div class="space-between full-center row gap-2" style="width: 100%;">
+                <section class="solution">
+                    <h2>[title.val;block=section]</h2>
+                    <p>[description.val;block=section]</p>
+                    <p>Points à gagner : [points.val;block=section]</p>
+                    <p>Command SSH : [SSH.val;block=section]</p>
+                    <p>Solution : [solution.val;block=section]</p>
+                    <p>Type : [type.val;block=section]</p>
+                    <p>Difficulté : [difficulty.val;block=section]</p>
+                </section>
+                <section>
+                    <form action="[onshow.cible]" method="GET">
+                        <h2>Modifier le challenge</h2>
+                        <input type="hidden" name="route" value="update_challenge">
+                        <input type="hidden" name="id" value="[id.val;block=form]" id="id">
+                        <input type="text" placeholder="Titre" name="title" id="title" required>
+                        <input type="text" placeholder="Description" name="description" id="description" required>
+                        <input type="number" placeholder="Points" name="points" id="points" required>
+                        <div>
+                            <label for="type">Type :</label>
+                            <select name="type" id="type">
+                                <option value="CTF">CTF</option>
+                                <option value="Web">Web</option>
+                                <option value="Forensic">Forensic</option>
+                                <option value="Reverse">Reverse</option>
+                                <option value="Crypto">Crypto</option>
+                                <option value="Pwn">Pwn</option>
+                                <option value="Misc">Misc</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="difficulty">Difficulté :</label>
+                            <select name="difficulty" id="difficulty">
+                                <option value="Facile">Facile</option>
+                                <option value="Moyen">Moyen</option>
+                                <option value="Difficile">Difficile</option>
+                            </select>
+                        </div>
+                        <input type="text" placeholder="Commande SSH" name="command" id="command" required>
+                        <input type="text" placeholder="Solution" name="solution" id="solution" required>
+                        <input type="submit" class="submit valide" value="Valider la modification">
+                    </form>
+                </section>
+            </div>
         </section>
     </header>
 
