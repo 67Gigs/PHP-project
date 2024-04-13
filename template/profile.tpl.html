@@ -12,7 +12,7 @@
         function emailValidate() {
             const email = document.querySelector('input[name="email"]');
             const email_submit = document.getElementById('email_submit');
-            email.addEventListener('input', () => {
+            email.addEventListener('change', () => {
                 if (email.value.length > 0) {
                     email_submit.disabled = false;
                 } else {
@@ -26,25 +26,30 @@
             const password_confirm = document.querySelector('input[name="password_confirm"]');
             const password_submit = document.getElementById('password_submit');
             const ancient_password = document.querySelector('input[name="ancient_password"]');
-            ancient_password.addEventListener('input', () => {
+            ancient_password.addEventListener('change', () => {
                 if (password.value.length > 0 && password_confirm.value.length > 0 && password_confirm.value === password.value) {
                     password_submit.disabled = false;
                 } else {
                     password_submit.disabled = true;
                 }
             })
-            password.addEventListener('input', () => {
-                if (password.value.length > 0 && password_confirm.value.length > 0 && password_confirm.value === password.value) {
+            password.addEventListener('change', () => {
+                if (password.value.length > 8 && password_confirm.value.length > 8 && password_confirm.value === password.value) {
                     password_submit.disabled = false;
+                    document.getElementById('message-2').innerHTML = '';
                 } else {
+                    document.getElementById('message-2').innerHTML = 'Les mots de passe ne correspondent pas ou ont moins de 8 caractères';
                     password_submit.disabled = true;
                 }
             })
-            password_confirm.addEventListener('input', () => {
-                if (password.value.length > 0 && password_confirm.value.length > 0 && password_confirm.value === password.value) {
+            password_confirm.addEventListener('change', () => {
+                if (password.value.length > 8 && password_confirm.value.length > 8 && password_confirm.value === password.value) {
                     password_submit.disabled = false;
+                    document.getElementById('message-2').innerHTML = '';
                 } else {
                     password_submit.disabled = true;
+                    document.getElementById('message-2').innerHTML = 'Les mots de passe ne correspondent pas ou ont moins de 8 caractères';
+
                 }
             })
         }
@@ -87,7 +92,7 @@
             <div>
                 <h2>Modifier email : </h2>
                 <form action="[onshow.cible]?route=update_email" method="get">
-                    <input type="email" name="email" placeholder="Nouvel email">
+                    <input type="email" name="email" placeholder="Nouvel email" required>
                     <input type="submit" class="submit valide" disabled id="email_submit" value="Modifier">
                 </form>
             </div>
@@ -97,6 +102,7 @@
                     <input type="password" name="ancient_password" placeholder="Ancien mot de passe" required>
                     <input type="password" name="password" placeholder="Nouveau mot de passe" required>
                     <input type="password" name="password_confirm" placeholder="Confirmer mot de passe" required>
+                    <p id="message-2" class="red"></p>
                     <input type="submit" class="submit valide" disabled id="password_submit" value="Modifier">
                 </form>
             </div>

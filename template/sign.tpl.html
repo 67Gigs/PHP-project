@@ -8,6 +8,47 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script>
+       function passwordValidate() {
+            const password = document.querySelector('input[name="password"]');
+            const password_confirm = document.querySelector('input[name="password_confirm"]');
+            password.addEventListener('input', () => {
+                if (password.value.length > 8 && password_confirm.value.length > 8 && password_confirm.value === password.value) {
+                    document.getElementById('message-2').innerHTML = '';
+                } else {
+                    document.getElementById('message-2').innerHTML = 'Les mots de passe ne correspondent pas ou ont moins de 8 caractères';
+                }
+            })
+            password_confirm.addEventListener('input', () => {
+                if (password.value.length > 8 && password_confirm.value.length > 8 && password_confirm.value === password.value) {
+                    document.getElementById('message-2').innerHTML = '';
+                } else {
+                    document.getElementById('message-2').innerHTML = 'Les mots de passe ne correspondent pas ou ont moins de 8 caractères';
+                }
+            })
+        }
+
+        function formValdiaor() {
+            const form = document.querySelector('form');
+            const username = document.querySelector('input[name="username"]');
+            const email = document.querySelector('input[name="email"]');
+            const password = document.querySelector('input[name="password"]');
+            const password_confirm = document.querySelector('input[name="password_confirm"]');
+            form.addEventListener('change', () => {
+                if (username.value.length > 0 && email.value.length > 0 && password.value.length > 8 && password_confirm.value.length > 8 && password_confirm.value === password.value) {
+                    document.getElementById('submit').disabled = false;
+                } else {
+                    document.getElementById('submit').disabled = true;
+                }
+            
+            })
+            
+        }
+        window.addEventListener('load', passwordValidate);
+        window.addEventListener('load', formValdiaor);
+
+    </script>
+
 </head>
 <body class="space-between">
     <header>
@@ -22,8 +63,8 @@
 
             <input type="password" placeholder="Mot de passe" name="password" id="password">
             <input type="password" placeholder="Confirmer le mot de passe" name="password_confirm" id="password_confirm" required>
-        
-            <input type="submit" class="submit" value="s'inscrire">
+            <p id="message-2" class="red"></p>
+            <input type="submit" class="submit" id="submit" disabled value="s'inscrire">
             <a href="[onshow.cible]?route=login">Se connecter</a>
         </form>
     </header>

@@ -439,3 +439,7 @@ h1{
 .validated {
     color: #9fef00;
 }
+
+.red {
+    color: rgb(228, 81, 81);
+}
