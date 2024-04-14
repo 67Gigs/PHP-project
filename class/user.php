@@ -8,10 +8,11 @@ class User {
     private $role = 'user';
     private $score = 0;
 
-    public function __construct($username, $password, $email) {
+    public function __construct($username, $password, $email, $role = 'user') {
         $this->username = $username;
         $this->password = $password;
         $this->email = $email;
+        $this->role = $role;
     }
 
     public function getUsername() {
@@ -55,10 +56,11 @@ class AccessUser {
         $this->pdo = $param_pdo;
     }
 
-    public function addUser($username, $password, $email) {
+    public function addUser($username, $password, $email, $role = 'user') {
         $user = new User($username, $password, $email);
+        $user->setRole($role);
         try {
-            $req = "INSERT INTO users (username, password, email, role, score) VALUES ('$username', '$password', '$email', 'user', 0)";
+            $req = "INSERT INTO users (username, password, email, role, score) VALUES ('$username', '$password', '$email', '$role', 0)";
             $res = $this->pdo->prepare($req);
             $res->execute();
             if ($res) {
@@ -74,7 +76,10 @@ class AccessUser {
     public function removeUser($username) {
         try {
             $req = "DELETE FROM users WHERE username = '$username'";
+            $req2 = "DELETE FROM user_challenge WHERE username = '$username'";
             $res = $this->pdo->prepare($req);
+            $res2 = $this->pdo->prepare($req2);
+            $res2->execute();
             $res->execute();
         } catch (Exception $e) {
             echo 'Error : ' . $e->getMessage();
@@ -123,7 +128,7 @@ class AccessUser {
             $data = $res->fetchAll();
             $users = [];
             foreach ($data as $user) {
-                array_push($users, new User($user['username'], $user['password'], $user['email']));
+                array_push($users, new User($user['username'], $user['password'], $user['email'], $user['role']));
             }
             return $users;
         } catch (Exception $e) {

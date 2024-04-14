@@ -130,7 +130,6 @@ class Appli {
     private function profile($accUser) { // page de profil ou de profil admin
         if (isset($_SESSION["role"])) { // verifier si l'utilisateur est connecté
             $user = $accUser->getUser($_SESSION["username"]); // recuperer les informations de l'utilisateur
-            
             // extraire les informations de l'utilisateur
             $username = $user->getUsername();
             $email = $user->getEmail();
@@ -142,10 +141,24 @@ class Appli {
             $email = [$email];
             $role = [$role];
             $score = [$score];
+
+
+            
             
             // charger different templates, en fonction de si il est administrateur ou non
             if ($_SESSION["role"] == "admin") {
                 $this->tbs->LoadTemplate("../template/profileAdmin.tpl.html"); // template administrateur
+                $users = $accUser->getUsers(); // recuperer les informations de tous les utilisateurs
+                $usernames = [];
+
+                foreach ($users as $usere) { // verifier si l'utilisateur est administrateur
+                    if ($usere->getRole() != 'admin') {
+                        $usernames[] = $usere->getUsername();
+                    }
+                }
+                $this->tbs->MergeBlock('usernames', $usernames);
+                $this->tbs->MergeBlock('usernames', $usernames);                
+                
             } else {
                 $this->tbs->LoadTemplate("../template/profile.tpl.html"); // template utilisateur
                 $this->tbs->MergeBlock('score', $score); // merge les données
@@ -349,17 +362,17 @@ class Appli {
 
             case 'add_user_process': // processus d'ajout d'utilisateur
                 if (isset($_GET["username"]) && isset($_GET["password"]) && isset($_GET["email"])) {
-                    $accUser->addUser($_GET["username"], $_GET["password"], $_GET["email"]);
-                } else {
-                    header('Location: ' . $_SERVER['PHP_SELF']);
-                    $this->default();
+                    $accUser->addUser($_GET["username"], $_GET["password"], $_GET["email"], $_GET["role"]);
                 }
+                header('Location: ' . $_SERVER['PHP_SELF']);
+                $this->default();
 
                 break;
 
             case 'remove_user': // processus de suppression d'utilisateur
                 if (isset($_GET["username"]) && isset($_SESSION["role"]) && $_SESSION["role"] == "admin") {
                     $accUser->removeUser($_GET["username"]);
+                    
                 }
                 header('Location: ' . $_SERVER['PHP_SELF']);
                 $this->default();
@@ -368,6 +381,7 @@ class Appli {
             case 'profile': // page de profil ou de profil admin
                 if (isset($_SESSION["role"])) { // verifier si l'utilisateur est connecté
                     $this->profile($accUser);
+
                 } else {
                     header('Location: ' . $_SERVER['PHP_SELF']);
                     $this->default();

@@ -25,14 +25,47 @@
             </div>
 
         </nav>
-        
-        <section>
-            <h1>Profile</h1>
-            <p>Pseudo : [username.val;block=section]</p>
-            <p>Email : [email.val;block=section]</p>
-            <p>Role : [role.val;block=section]</p>
-        </section>
+        <div class="row full-center space-between" style="width: 80%;">
+            <section>
+                <h1>Profile</h1>
+                <p>Pseudo : [username.val;block=section]</p>
+                <p>Email : [email.val;block=section]</p>
+                <p>Role : [role.val;block=section]</p>
+            </section>
+            <section class="space-between full-center column">
+                <h2>Ajouter un utilisateur</h2>
+                <form action="[onshow.cible]" method="get">
+                    <input type="hidden" name="route" value="add_user_process">
+                    <input type="text" placeholder="Pseudo" name="username" id="username" required>
+                    <input type="email" placeholder="Email" name="email" id="email" required>
+                    <input type="password" placeholder="Mot de passe" name="password" id="password" required>
+                    <div>
+                        <label for="role">Role :</label>
+                        <select name="role" id="role">
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <input type="submit" value="Ajouter" class="submit">
+                </form>
+            </section>
+        </div>
     </header>
+
+        
+    <section class="space-between full-center" >
+        <h2>Liste des utilisateurs</h2>
+        <table style="width: 100%;">
+            <tr>
+                <th>Pseudo</th>
+                <th>Action</th>
+            </tr>
+            <tr class="gap-2">
+                <td>[usernames.val;block=tr]</td>
+                <td><a class="remove delete" href="[onshow.cible]?route=remove_user&username=[usernames.val;block=tr]">Supprimer</a></td>
+            </tr>
+        </table>
+    </section>
 
     <footer>
         <p>© 2024 , All rights reserved, Noureddine BEN SADOK & Nina DORRY</p>
