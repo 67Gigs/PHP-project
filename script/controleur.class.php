@@ -21,13 +21,14 @@ class Appli {
 
     private function allChallenges() { // page de tous les challenges
         
-        if (isset($_SESSION["role"]) && $_SESSION["role"] == "admin") {
-            $this->tbs->LoadTemplate("../template/challengesAdmin.tpl.html");
+        if (isset($_SESSION["role"]) && $_SESSION["role"] == "admin") { // charger different templates, en fonction de si il est administrateur ou non
+            $this->tbs->LoadTemplate("../template/challengesAdmin.tpl.html"); // template administrateur
         } else {
-            $this->tbs->LoadTemplate("../template/challenges.tpl.html");
+            $this->tbs->LoadTemplate("../template/challenges.tpl.html"); // template utilisateurs
         }
-        $data = new AccessChallenge($this->PDO);
-        $data->getAllChallenges();
+        $data = new AccessChallenge($this->PDO); // creer une instance de la classe AccesChallenge pour pouvoir acceder au differente fonctions
+        
+        // initialisation des tableaux pour extraire les donnees
         $titles = [];
         $types = [];
         $descriptions = [];
@@ -35,8 +36,9 @@ class Appli {
         $difficulty = [];
         $id = [];
         $validated = [];
-    
-        foreach ($data->getAllChallenges() as $challenge) {
+
+        // parcourir chaque challenge et extraire les donnees
+        foreach ($data->getAllChallenges() as $challenge) { 
             $titles[] = $challenge->getTitle();
             $types[] = $challenge->getType();
             $descriptions[] = $challenge->getDescription();
@@ -45,24 +47,27 @@ class Appli {
             $id[] = $challenge->getId();
         }
 
-        // verify if the challenge is validated by the user
-        if (isset($_SESSION["username"])) {
+        // verifier les challenges qui etaient validé par l'utilisateur :
+        if (isset($_SESSION["username"])) { // verifier si l'utilisateur est connecté
             foreach ($data->getAllChallenges() as $challenge) {
+                // verifier si le challenge est validé par l'utilisateur
                 $req = "SELECT * FROM user_challenge WHERE username = '".$_SESSION['username']."' AND id_challenge = '".$challenge->getId()."'";
                 $res = $this->PDO->prepare($req);
                 $res->execute();
                 $data = $res->fetch();
-                if ($data) {
+                if ($data) { // message de validation
                     $validated[] = "Validé";
                 } else {
                     $validated[] = "Non validé";
                 }
             }
+            // merge les donnees
             $this->tbs->MergeBlock('valide', $validated);
         } else {
             $this->tbs->MergeBlock('valide', [""]);
         }
 
+        // merge les donnees
         $this->tbs->MergeBlock('title', $titles);
         $this->tbs->MergeBlock('type', $types);
         $this->tbs->MergeBlock('description', $descriptions);
@@ -70,29 +75,37 @@ class Appli {
         $this->tbs->MergeBlock('difficulty', $difficulty);
         $this->tbs->MergeBlock('id', $id);
 
-        
+        // afficher le template
         $this->tbs->Show();
     }
 
-    private function challenge($id) { // page d'un challenge (avec id en paramètre)
-        if (isset($_SESSION["role"]) && $_SESSION["role"] == "admin") {
-            $this->tbs->LoadTemplate("../template/challengeidAdmin.tpl.html");
+    // page d'un challenge (avec id en paramètre)
+    private function challenge($id) { 
+        if (isset($_SESSION["role"]) && $_SESSION["role"] == "admin") { // charger different templates, en fonction de si il est administrateur ou non
+            $this->tbs->LoadTemplate("../template/challengeidAdmin.tpl.html"); // template administrateur
         } else {
-            $this->tbs->LoadTemplate("../template/challengeid.tpl.html");
+            $this->tbs->LoadTemplate("../template/challengeid.tpl.html"); // template utilisateurs
         }
-        $data = new AccessChallenge($this->PDO);
+        $data = new AccessChallenge($this->PDO); // creer une instance de la classe AccesChallenge pour pouvoir acceder au differente fonctions
         $challenge = $data->getChallenge($id);
-        if ($challenge) {
-            $req = "SELECT * FROM user_challenge WHERE username = '".$_SESSION['username']."' AND id_challenge = '".$challenge->getId()."'";
-            $res = $this->PDO->prepare($req);
-            $res->execute();
-            $data = $res->fetch();
-            if ($data) {
-                $this->tbs->MergeBlock('valide', ["Validé"]);
+        if ($challenge) { // verifier si le challenge existe
+            // verifier si l'utilisateur est connecté
+            if (isset($_SESSION["username"])) { 
+                // verifier si le challenge est validé par l'utilisateur
+                $req = "SELECT * FROM user_challenge WHERE username = '".$_SESSION['username']."' AND id_challenge = '".$challenge->getId()."'";
+                $res = $this->PDO->prepare($req);
+                $res->execute();
+                $data = $res->fetch();
+                if ($data) { // message de validation
+                    $this->tbs->MergeBlock('valide', ["Validé"]);
+                } else {
+                    $this->tbs->MergeBlock('valide', ["Non validé"]);
+                }
             } else {
-                $this->tbs->MergeBlock('valide', ["Non validé"]);
+                $this->tbs->MergeBlock('valide', [""]);
             }
 
+            // merge les donnees
             $this->tbs->MergeBlock('title', [$challenge->getTitle()]);
             $this->tbs->MergeBlock('type', [$challenge->getType()]);
             $this->tbs->MergeBlock('description', [$challenge->getDescription()]);
@@ -102,7 +115,7 @@ class Appli {
             $this->tbs->MergeBlock('solution', [$challenge->getSolution()]);
             $this->tbs->MergeBlock('SSH', [$challenge->getSSH_link()]);
             $this->tbs->Show();
-        } else {
+        } else { // si le challenge n'existe pas, il le retourne à la page de tous les challenges
             $cible = $_SERVER["PHP_SELF"] . "?route=all_challenges";
             $this->allChallenges();
         }
@@ -114,35 +127,47 @@ class Appli {
         $this->tbs->Show();
     }
 
-    private function addUser() { // page d'ajout d'utilisateur (formulaire)
-        $this->tbs->LoadTemplate("../template/addUser.tpl.html");
-        $this->tbs->Show();
-    }
-
     private function profile($accUser) { // page de profil ou de profil admin
-        if (isset($_SESSION["role"])) {
+        if (isset($_SESSION["role"])) { // verifier si l'utilisateur est connecté
+            $user = $accUser->getUser($_SESSION["username"]); // recuperer les informations de l'utilisateur
             
-            if ($_SESSION["role"] == "admin") {
-                $this->tbs->LoadTemplate("../template/profileAdmin.tpl.html");
-            } else {
-                $this->tbs->LoadTemplate("../template/profile.tpl.html");
-            }
-            $user = $accUser->getUser($_SESSION["username"]);
-    
+            // extraire les informations de l'utilisateur
             $username = $user->getUsername();
             $email = $user->getEmail();
             $role = $user->getRole();
-            $score = $user->getScore();
+            $score = $accUser->getUserScore($_SESSION["username"]);
 
+            // initialisation des tableaux pour afficher les donnees
+            $username = [$username];
+            $email = [$email];
+            $role = [$role];
+            $score = [$score];
+            
+            // charger different templates, en fonction de si il est administrateur ou non
+            if ($_SESSION["role"] == "admin") {
+                $this->tbs->LoadTemplate("../template/profileAdmin.tpl.html"); // template administrateur
+            } else {
+                $this->tbs->LoadTemplate("../template/profile.tpl.html"); // template utilisateur
+                $this->tbs->MergeBlock('score', $score); // merge les données
+            }
+            
+            //merge les données
+            $this->tbs->MergeBlock('username', $username);
+            $this->tbs->MergeBlock('email', $email);
+            $this->tbs->MergeBlock('role', $role);
+            // afficher le template
             $this->tbs->Show();
-        } else {
+
+        } else { // si l'utilisateur n'est pas connecté, il le retourne à la page d'accueil
+            $cible = $_SERVER["PHP_SELF"];
             $this->default();
         }
     }
 
-    private function updateEmail($accUser) { // processus de mise à jour de l'email
-        if (isset($_SESSION["username"]) && isset($_GET["email"])) {
-            $accUser->updateEmail($_SESSION["username"], $_GET["email"]);
+    // processus de mise à jour de l'email
+    private function updateEmail($accUser) { 
+        if (isset($_SESSION["username"]) && isset($_GET["email"])) { // verifier si l'utilisateur est connecté et si l'email est renseigné
+            $accUser->updateEmail($_SESSION["username"], $_GET["email"]); // mettre à jour l'email
             $this->profile($accUser);
         } else {
             $cible = $_SERVER["PHP_SELF"];
@@ -150,10 +175,11 @@ class Appli {
         }
     }
 
-    private function updatePassword($accUser) { // processus de mise à jour du mot de passe
-        if (isset($_SESSION["username"]) && isset($_GET["password"])) {
-            if ($accUser->getUser($_SESSION["username"])->getPassword() == $_GET["ancient_password"]) {
-                $accUser->updatePassword($_SESSION["username"], $_GET["password"]);
+    // processus de mise à jour du mot de passe
+    private function updatePassword($accUser) { 
+        if (isset($_SESSION["username"]) && isset($_GET["password"])) { // verifier si l'utilisateur est connecté et si le mot de passe est renseigné
+            if ($accUser->getUser($_SESSION["username"])->getPassword() == $_GET["ancient_password"]) { // verifier si l'ancien mot de passe est correct
+                $accUser->updatePassword($_SESSION["username"], $_GET["password"]); // mettre à jour le mot de passe
                 $message = "Mot de passe mis à jour";
             } else {
                 $message = "Mot de passe incorrect";
@@ -165,13 +191,36 @@ class Appli {
         }
     }
 
+    // leaderboard
+    private function leaderboard($accUser) {
+        $this->tbs->LoadTemplate("../template/leaderboard.tpl.html"); // charger le template
+        $data = $accUser->getLeaderboard(); // recuperer les informations des utilisateurs
+        // initialisation des tableaux pour afficher les donnees
+        $usernames = [];
+        $scores = [];
+
+        // parcourir chaque utilisateur et extraire les informations
+        foreach ($data as $user) {
+            $usernames[] = $user->getUsername();
+            $scores[] = $user->getScore();
+        }
+
+        // merge les donnees
+        $this->tbs->MergeBlock('username', $usernames);
+        $this->tbs->MergeBlock('score', $scores);
+        // afficher le template
+        $this->tbs->Show();
+    }
+
+    // page de contact
     private function contacte() {
         $this->tbs->LoadTemplate("../template/contacte.tpl.html");
         $this->tbs->Show();
     }
 
+    // page d'accueil
     private function default() { // page d'accueil
-        if (isset($_SESSION["username"])) {
+        if (isset($_SESSION["username"])) { // verifier si l'utilisateur est connecté
             $this->tbs->LoadTemplate("../template/accueilLogged.tpl.html");
         } else {
             $this->tbs->LoadTemplate("../template/accueil.tpl.html");
@@ -243,6 +292,7 @@ class Appli {
                         $this->default();
                     }
                 } else {
+                    // si l'id n'est pas renseigné, il le retourne à la page de tous les challenges
                     header('Location: ' . $_SERVER['PHP_SELF'] . "?route=all_challenges");
                     $this->allChallenges();
                 }
@@ -294,26 +344,7 @@ class Appli {
                 break;
 
             case 'leaderboard': // page du classement
-                $this->tbs->LoadTemplate("../template/leaderboard.tpl.html");
-                $data = $accUser->getLeaderboard();
-                $usernames = [];
-                $scores = [];
-                foreach ($data as $user) {
-                    $usernames[] = $user->getUsername();
-                    $scores[] = $user->getScore();
-                }
-                $this->tbs->MergeBlock('username', $usernames);
-                $this->tbs->MergeBlock('score', $scores);
-                $this->tbs->Show();
-                break;
-
-            case 'add_user': // page d'ajout d'utilisateur (formulaire)
-                if (isset($_SESSION["role"]) && $_SESSION["role"] == "admin") {
-                    $this->addUser();
-                } else {
-                    header('Location: ' . $_SERVER['PHP_SELF']);
-                    $this->default();
-                }
+                $this->leaderboard($accUser);
                 break;
 
             case 'add_user_process': // processus d'ajout d'utilisateur
@@ -325,34 +356,18 @@ class Appli {
                 }
 
                 break;
+
+            case 'remove_user': // processus de suppression d'utilisateur
+                if (isset($_GET["username"]) && isset($_SESSION["role"]) && $_SESSION["role"] == "admin") {
+                    $accUser->removeUser($_GET["username"]);
+                }
+                header('Location: ' . $_SERVER['PHP_SELF']);
+                $this->default();
+                break;
             
             case 'profile': // page de profil ou de profil admin
-                if (isset($_SESSION["role"])) {
-                    $user = $accUser->getUser($_SESSION["username"]);
-            
-                    $username = $user->getUsername();
-                    $email = $user->getEmail();
-                    $role = $user->getRole();
-                    $score = $accUser->getUserScore($_SESSION["username"]);
-
-                    $username = [$username];
-                    $email = [$email];
-                    $role = [$role];
-                    $score = [$score];
-                    
-                    if ($_SESSION["role"] == "admin") {
-                        $this->tbs->LoadTemplate("../template/profileAdmin.tpl.html");
-                    } else {
-                        $this->tbs->LoadTemplate("../template/profile.tpl.html");
-                        $this->tbs->MergeBlock('score', $score);
-                    }
-                    
-                    //merge les données
-                    $this->tbs->MergeBlock('username', $username);
-                    $this->tbs->MergeBlock('email', $email);
-                    $this->tbs->MergeBlock('role', $role);
-        
-                    $this->tbs->Show();
+                if (isset($_SESSION["role"])) { // verifier si l'utilisateur est connecté
+                    $this->profile($accUser);
                 } else {
                     header('Location: ' . $_SERVER['PHP_SELF']);
                     $this->default();
@@ -360,12 +375,10 @@ class Appli {
                 break;
             
             case 'delete_profile': // processus de suppression d'utilisateur
-                if (isset($_SESSION['role']) && $_SESSION['role'] ) {
+                if (isset($_SESSION['role'])) { // verifier si l'utilisateur est connecté
+                    // destruction de la session et suppression de l'utilisateur
                     session_destroy();
-                    $accUser->removeUser($_SESSION['username']);
-                    $message = '';
-                } else {
-                    $message = '';
+                    $accUser->removeUser($_SESSION['username']); 
                 }
                 header('Location: ' . $_SERVER['PHP_SELF']);
                 $this->default();
@@ -389,6 +402,4 @@ class Appli {
         }
     }
 
-
 }
-
