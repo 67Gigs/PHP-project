@@ -91,14 +91,16 @@
         <div class="row gap-2 full-center">
             <div>
                 <h2>Modifier email : </h2>
-                <form action="[onshow.cible]?route=update_email" method="get">
+                <form action="[onshow.cible]" method="get">
+                    <input type="hidden" name="route" value="update_email">
                     <input type="email" name="email" placeholder="Nouvel email" required>
                     <input type="submit" class="submit valide" disabled id="email_submit" value="Modifier">
                 </form>
             </div>
             <div>
                 <h2>Modifier mot de passe : </h2>
-                <form action="[onshow.cible]?route=update_password" method="get">
+                <form action="[onshow.cible]" method="get">
+                    <input type="hidden" name="route" value="update_password">
                     <input type="password" name="ancient_password" placeholder="Ancien mot de passe" required>
                     <input type="password" name="password" placeholder="Nouveau mot de passe" required>
                     <input type="password" name="password_confirm" placeholder="Confirmer mot de passe" required>
